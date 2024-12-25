@@ -12,7 +12,7 @@ public class Transactions implements DBConnection {
                 CREATE TABLE transactions (
                     transaction_id INT AUTO_INCREMENT PRIMARY KEY,
                     driver_id INT NOT NULL,
-                    amount DECIMAL(10, 2),
+                    amount DECIMAL(10, 2) NOT NULL,
                     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     payment_status ENUM('pending', 'completed') DEFAULT 'pending',
                     FOREIGN KEY (driver_id) REFERENCES driver(driver_id)
