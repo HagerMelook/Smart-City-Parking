@@ -34,7 +34,7 @@ public class TopLots implements DBConnection{
             AFTER UPDATE ON top_lots
             FOR EACH ROW
             BEGIN
-                IF NEW.revenue > 10000 THEN
+                IF NEW.revenue >= 10000 THEN
                     UPDATE top_lots
                     SET is_top = TRUE
                     WHERE lot_id = NEW.lot_id;
