@@ -11,7 +11,7 @@ public class Reservations implements DBConnection {
                 CREATE TABLE reservations (
                     resv_id INT AUTO_INCREMENT PRIMARY KEY,
                     driver_id INT NOT NULL,
-                    spot_id INT,
+                    spot_id INT NOT NULL,
                     start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     end_time TIMESTAMP,
                     status ENUM('active','confirmed', 'expired', 'canceled') DEFAULT 'active',
@@ -34,15 +34,14 @@ public class Reservations implements DBConnection {
 
     public void createTriggers() {
         String applyPenaltyTrigger = """
-            CREATE TRIGGER apply_penalty
-            BEFORE INSERT ON reservations
-            FOR EACH ROW
-            BEGIN
-                SET NEW.end_time = DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 2 HOUR);
-                SET NEW.penalty = (SELECT price * 2 FROM parking_spots WHERE spot_id = NEW.spot_id);
-            END;
-            """;
-        
+                CREATE TRIGGER apply_penalty
+                BEFORE INSERT ON reservations
+                FOR EACH ROW
+                BEGIN
+                    SET NEW.end_time = DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 2 HOUR);
+                    SET NEW.penalty = (SELECT price * 2 FROM parking_spots WHERE spot_id = NEW.spot_id);
+                END;
+                """;
 
         String updateSpotStatus = """
                 CREATE TRIGGER update_spot
@@ -60,20 +59,22 @@ public class Reservations implements DBConnection {
                 ON SCHEDULE EVERY 30 MINUTE
                 DO
                 BEGIN
-                    UPDATE reservations
-                    SET status = 'expired'
-                WHERE (status = 'active' OR status = 'confirmed') AND CURRENT_TIMESTAMP >= end_time;
                     UPDATE parking_spots
                     SET status = 'available'
                     WHERE spot_id IN (
                         SELECT spot_id
                         FROM reservations
-                        WHERE status = 'expired'
+                        WHERE (status = 'active' OR status = 'confirmed') AND CURRENT_TIMESTAMP >= end_time
                     );
-                    IF  OLD.status = 'active' THEN
-                        INSERT INTO transactions (driver_id, amount)
-                        VALUES (NEW.driver_id, NEW.penalty);
-                    END IF;
+
+                    INSERT INTO transactions (driver_id, amount)
+                    SELECT r.driver_id, r.penalty
+                    FROM reservations r
+                    WHERE r.status = 'active' AND CURRENT_TIMESTAMP >= r.end_time;
+
+                    UPDATE reservations
+                    SET status = 'expired'
+                    WHERE (status = 'active' OR status = 'confirmed') AND CURRENT_TIMESTAMP >= end_time;
                 END;
                 """;
 
