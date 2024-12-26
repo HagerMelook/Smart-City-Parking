@@ -5,11 +5,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.example.parking.dto.TopLotsDTO;
 import com.example.parking.entities.DBConnection;
 
 public class TopLotsDAO implements DBConnection {
-    public void insertTopLot(int lot_id, double revenue, boolean is_top) {
+    public String insertTopLot(int lot_id, double revenue, boolean is_top) {
         String insertSQL = "INSERT INTO top_lots (lot_id, revenue, is_top) VALUES (?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -25,10 +28,11 @@ public class TopLotsDAO implements DBConnection {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return "Inserted Completed Successfully";
     }
 
-    public void updateLotRev(int lotId, double amount) {
-        String updateSQL = "UPDATE top_lots SET revenue = reveue+? WHERE lot_id = ?";
+    public String updateLotRev(int lotId, double amount) {
+        String updateSQL = "UPDATE top_lots SET revenue = revenue+? WHERE lot_id = ?";
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(updateSQL)) {
@@ -42,6 +46,7 @@ public class TopLotsDAO implements DBConnection {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return "Updated Completed Successfully";
     }
 
     public boolean checkLot(int lot_id) {
@@ -56,7 +61,7 @@ public class TopLotsDAO implements DBConnection {
                     isTop = resultSet.getBoolean("is_top");
                     System.out.println("Is top lot: " + isTop);
                 } else {
-                    System.out.println("Driver not found.");
+                    System.out.println("lot not found.");
                 }
             }
         } catch (SQLException e) {
@@ -65,19 +70,42 @@ public class TopLotsDAO implements DBConnection {
         return isTop;
     }
 
-    public void getTopLots() {
-        String selectSQL = "SELECT lot_id FROM top_lots WHERE is_top = TRUE";
+    public boolean checkLotExist(int lot_id) {
+        String selectSQL = "SELECT * FROM top_lots WHERE lot_id = ?";
+        boolean isExist = false;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+            preparedStatement.setInt(1, lot_id);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    System.out.println("Lot ID: " + resultSet.getInt("lot_id"));
-                    System.out.println("Revenue: " + resultSet.getDouble("revenue"));
+                if (resultSet.next()) {
+                    isExist = true;
+                } else {
+                    isExist = false;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return isExist;
+    }
+
+    public List<TopLotsDTO> getTopLots() {
+        String selectSQL = "SELECT * FROM top_lots WHERE is_top = TRUE";
+        List<TopLotsDTO> list = new ArrayList<>();
+        TopLotsDTO topLots = new TopLotsDTO();
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    topLots.setLot_id(resultSet.getInt("lot_id"));
+                    topLots.setRevenue(resultSet.getInt("revenue"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

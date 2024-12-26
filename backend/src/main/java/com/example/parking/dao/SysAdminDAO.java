@@ -6,12 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.example.parking.dto.SysAdminDTO;
 import com.example.parking.entities.DBConnection;
 
-public class SysAdminDAO implements DBConnection{
-            public void insertSYSAdmin(String name) {
+public class SysAdminDAO implements DBConnection {
+    public int insertSYSAdmin(String name) {
         String insertSQL = "INSERT INTO sys_admin (name) VALUES (?)";
-
+        int generatedId = 0;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
 
@@ -20,13 +21,27 @@ public class SysAdminDAO implements DBConnection{
             int rowsAffected = preparedStatement.executeUpdate();
             System.out.println("Insert completed. Rows affected: " + rowsAffected);
 
+            if (rowsAffected > 0) {
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        generatedId = generatedKeys.getInt("sys_admin_id");
+                        System.out.println("Inserted row ID: " + generatedId);
+                    } else {
+                        System.out.println("No ID was returned.");
+                    }
+                }
+            } else {
+                System.out.println("Insert failed, no rows affected.");
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return generatedId;
     }
 
-    public void updateSYSAdminName(int sys_admin_Id, String name) {
-        String updateSQL = "UPDATE lot_admin SET name = ? WHERE lot_admin_id = ?";
+    public String updateSYSAdminName(int sys_admin_Id, String name) {
+        String updateSQL = "UPDATE sys_admin SET name = ? WHERE sys_admin_id = ?";
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(updateSQL)) {
@@ -40,11 +55,12 @@ public class SysAdminDAO implements DBConnection{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return "Updated Completed Successfully";
     }
 
-        public void selectSYSAdminById(int sys_admin_Id) {
+    public SysAdminDTO getSYSAdminById(int sys_admin_Id) {
         String selectSQL = "SELECT * FROM sys_admin WHERE sys_admin_id= ?";
-
+        SysAdminDTO sysAdmin = new SysAdminDTO();
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
 
@@ -52,8 +68,8 @@ public class SysAdminDAO implements DBConnection{
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    System.out.println("SYS Admin ID: " + resultSet.getInt("sys_admin_id"));
-                    System.out.println("Name: " + resultSet.getString("name"));
+                    sysAdmin.setSys_admin_id(sys_admin_Id);
+                    sysAdmin.setName(resultSet.getString("name"));
                 } else {
                     System.out.println("No sys_admin found with ID: " + sys_admin_Id);
                 }
@@ -61,6 +77,7 @@ public class SysAdminDAO implements DBConnection{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return sysAdmin;
     }
 
 }

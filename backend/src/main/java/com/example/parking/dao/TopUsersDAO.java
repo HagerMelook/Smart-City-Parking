@@ -5,7 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.example.parking.dto.TopUsersDTO;
 import com.example.parking.entities.DBConnection;
 
 public class TopUsersDAO implements DBConnection {
@@ -30,18 +33,22 @@ public class TopUsersDAO implements DBConnection {
         return isTop;
     }
 
-    public void getTopDriver() {
+    public List<TopUsersDTO> getTopDriver() {
         String selectSQL = "SELECT driver_id FROM top_users WHERE is_top = TRUE";
+        List<TopUsersDTO> list = new ArrayList<>();
+        TopUsersDTO topUsers = new TopUsersDTO();
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    System.out.println("Driver ID: " +resultSet.getInt("driver_id"));
+                    topUsers.setDriver_id(resultSet.getInt("driver_id"));
+                    topUsers.setNumber_of_resvs(resultSet.getInt("number_of_resvs"));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return list;
     }
 }

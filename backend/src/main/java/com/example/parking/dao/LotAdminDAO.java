@@ -6,12 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.example.parking.dto.LotAdminDTO;
 import com.example.parking.entities.DBConnection;
 
 public class LotAdminDAO implements DBConnection {
-        public void insertLotAdmin(String name, int lot_id) {
+    public int insertLotAdmin(String name, int lot_id) {
         String insertSQL = "INSERT INTO lot_admin (name, lot_id) VALUES (?, ?)";
-
+        int generatedId = 0;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
 
@@ -21,12 +22,26 @@ public class LotAdminDAO implements DBConnection {
             int rowsAffected = preparedStatement.executeUpdate();
             System.out.println("Insert completed. Rows affected: " + rowsAffected);
 
+            if (rowsAffected > 0) {
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        generatedId = generatedKeys.getInt("lot_admin_id");
+                        System.out.println("Inserted row ID: " + generatedId);
+                    } else {
+                        System.out.println("No ID was returned.");
+                    }
+                }
+            } else {
+                System.out.println("Insert failed, no rows affected.");
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return generatedId;
     }
 
-    public void updateLotAdminName(int lot_admin_Id, String name) {
+    public String updateLotAdminName(int lot_admin_Id, String name) {
         String updateSQL = "UPDATE lot_admin SET name = ? WHERE lot_admin_id = ?";
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -41,11 +56,12 @@ public class LotAdminDAO implements DBConnection {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return "Updated Completed Successfully";
     }
 
-        public void selectLotAdminById(int lot_admin_Id) {
+    public LotAdminDTO getLotAdminById(int lot_admin_Id) {
         String selectSQL = "SELECT * FROM lot_admin WHERE lot_admin_id= ?";
-
+        LotAdminDTO lotAdmin = new LotAdminDTO();
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
 
@@ -53,9 +69,9 @@ public class LotAdminDAO implements DBConnection {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    System.out.println("Lot Admin ID: " + resultSet.getInt("driver_id"));
-                    System.out.println("Name: " + resultSet.getString("name"));
-                    System.out.println("Lot ID: " + resultSet.getInt("lot_id"));
+                    lotAdmin.setLot_admin_id(lot_admin_Id);
+                    lotAdmin.setName(resultSet.getString("name"));
+                    lotAdmin.setLot_id(resultSet.getInt("lot_id"));
                 } else {
                     System.out.println("No lot_admin found with ID: " + lot_admin_Id);
                 }
@@ -63,11 +79,12 @@ public class LotAdminDAO implements DBConnection {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return lotAdmin;
     }
 
     public boolean checkAdminForLotEXIST(int lot_id) {
         String selectSQL = "SELECT * FROM lot_admin WHERE lot_id= ?";
-
+        boolean exist = false;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
 
@@ -75,14 +92,14 @@ public class LotAdminDAO implements DBConnection {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    return true;
+                    exist =  true;
                 } else {
-                    return false;
+                    exist= false;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return exist;
     }
 }

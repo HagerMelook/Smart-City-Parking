@@ -5,13 +5,16 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.example.parking.dto.ParkingLotDTO;
 import com.example.parking.entities.DBConnection;
 
-public class ParkingLotDAO implements DBConnection{
-    public void insertParkingLot(String name, String location, int capacity) {
+public class ParkingLotDAO implements DBConnection {
+    public int insertParkingLot(String name, String location, int capacity) {
         String insertSQL = "INSERT INTO parking_lots (name, location, capacity) VALUES (?, ?, ?)";
-
+        int generatedId = 0;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
 
@@ -22,12 +25,25 @@ public class ParkingLotDAO implements DBConnection{
             int rowsAffected = preparedStatement.executeUpdate();
             System.out.println("Insert completed. Rows affected: " + rowsAffected);
 
+            if (rowsAffected > 0) {
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        generatedId = generatedKeys.getInt("lot_id");
+                        System.out.println("Inserted row ID: " + generatedId);
+                    } else {
+                        System.out.println("No ID was returned.");
+                    }
+                }
+            } else {
+                System.out.println("Insert failed, no rows affected.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return generatedId;
     }
 
-    public void updateLotAdminName(int lot_Id, String name) {
+    public String updateLotName(int lot_Id, String name) {
         String updateSQL = "UPDATE parking_lots SET name = ? WHERE lot_id = ?";
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -42,11 +58,12 @@ public class ParkingLotDAO implements DBConnection{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return "Updated Completed Successfully";
     }
 
-        public void selectLotById(int lot_Id) {
+    public ParkingLotDTO getLotById(int lot_Id) {
         String selectSQL = "SELECT * FROM parking_lots WHERE lot_id= ?";
-
+        ParkingLotDTO parkingLot = new ParkingLotDTO();
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
 
@@ -54,10 +71,10 @@ public class ParkingLotDAO implements DBConnection{
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    System.out.println("Lot ID: " + resultSet.getInt("driver_id"));
-                    System.out.println("Name: " + resultSet.getString("name"));
-                    System.out.println("Location: " + resultSet.getString("location"));
-                    System.out.println("capacity: " + resultSet.getInt("capacity"));
+                    parkingLot.setLot_id(lot_Id);
+                    parkingLot.setName(resultSet.getString("name"));
+                    parkingLot.setCapacity(resultSet.getInt("capacity"));
+                    parkingLot.setLocation(resultSet.getString("location"));
                 } else {
                     System.out.println("No parking_lot found with ID: " + lot_Id);
                 }
@@ -65,5 +82,29 @@ public class ParkingLotDAO implements DBConnection{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return parkingLot;
+    }
+
+    public List<ParkingLotDTO> getAllLots() {
+        String selectSQL = "SELECT * FROM parking_lots";
+        ParkingLotDTO parkingLot = new ParkingLotDTO();
+        List<ParkingLotDTO> list = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    parkingLot = new ParkingLotDTO();
+                    parkingLot.setLot_id(resultSet.getInt("lot_id"));
+                    parkingLot.setName(resultSet.getString("name"));
+                    parkingLot.setCapacity(resultSet.getInt("capacity"));
+                    parkingLot.setLocation(resultSet.getString("location"));
+                    list.add(parkingLot);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }
