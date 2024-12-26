@@ -1,5 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Car, LayoutDashboard, LogOut, Settings, User } from "lucide-react";
+import {
+  Car,
+  LayoutDashboard,
+  LogOut,
+  Settings,
+  User,
+  ParkingCircle,
+} from "lucide-react";
 import proptype from "prop-types";
 
 export default function Layout({ children }) {
@@ -24,10 +31,16 @@ export default function Layout({ children }) {
             active={location.pathname === "/dashboard"}
           />
           <NavItem
-            to="/parking"
+            to="/parking-lots"
+            icon={<ParkingCircle />}
+            text="Parking Lots"
+            active={location.pathname === "/parking-lots"}
+          />
+          <NavItem
+            to="/parking-spots"
             icon={<Car />}
             text="Parking Spots"
-            active={location.pathname === "/parking"}
+            active={location.pathname === "/parking-spots"}
           />
           <NavItem
             to="/profile"
@@ -54,7 +67,7 @@ export default function Layout({ children }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8">{children}</main>
+      <main className="flex-1">{children}</main>
     </div>
   );
 }

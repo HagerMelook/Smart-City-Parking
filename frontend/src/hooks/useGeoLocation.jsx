@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const useGeolocation = () => {
+const useGeolocation = (watch = false) => {
   const [location, setLocation] = useState({
     latitude: null,
     longitude: null,
@@ -31,17 +31,28 @@ const useGeolocation = () => {
       }));
     };
 
-    const watcher = navigator.geolocation.watchPosition(success, error, {
+    const options = {
       enableHighAccuracy: true,
       timeout: 500000,
       maximumAge: 0,
-    });
-
-    // Cleanup function to stop watching the position
-    return () => {
-      navigator.geolocation.clearWatch(watcher);
     };
-  }, []);
+
+    let watcher;
+    if (watch) {
+      // Watch position continuously
+      watcher = navigator.geolocation.watchPosition(success, error, options);
+    } else {
+      // Get position once
+      navigator.geolocation.getCurrentPosition(success, error, options);
+    }
+
+    // Cleanup function
+    return () => {
+      if (watch && watcher) {
+        navigator.geolocation.clearWatch(watcher);
+      }
+    };
+  }, [watch]); // Added watch to dependency array
 
   return location;
 };
