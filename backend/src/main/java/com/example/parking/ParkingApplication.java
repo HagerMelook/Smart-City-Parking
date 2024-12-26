@@ -36,6 +36,7 @@ public class ParkingApplication {
 		tr.createTable();
 		TopLots tl = new TopLots();
 		tl.createTable();
+		tl.createTriggers();;
 		TopUsers tu = new TopUsers();
 		tu.createTable();
 		tu.createTriggers();

@@ -30,7 +30,7 @@ public class TopLots implements DBConnection{
 
     public void createTriggers(){
         String setIsTopTrigger ="""
-            CREATE TRIGGER set_is_top
+            CREATE TRIGGER set_is_top_lot
             AFTER UPDATE ON top_lots
             FOR EACH ROW
             BEGIN

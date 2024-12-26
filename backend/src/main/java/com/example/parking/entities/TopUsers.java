@@ -29,7 +29,7 @@ public class TopUsers implements DBConnection {
 
     public void createTriggers(){
         String setIsTopTrigger ="""
-            CREATE TRIGGER set_is_top
+            CREATE TRIGGER set_is_top_user
             AFTER UPDATE ON top_users
             FOR EACH ROW
             BEGIN
