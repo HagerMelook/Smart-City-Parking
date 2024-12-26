@@ -56,12 +56,7 @@ export default function Layout({ children }) {
           />
 
           <div className="absolute bottom-4 w-64">
-            <NavItem
-              to="/logout"
-              icon={<LogOut />}
-              text="Logout"
-              active={false}
-            />
+            <NavItem to="*" icon={<LogOut />} text="Logout" active={false} />
           </div>
         </nav>
       </aside>

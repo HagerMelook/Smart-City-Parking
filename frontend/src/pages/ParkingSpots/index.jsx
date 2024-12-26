@@ -1,78 +1,28 @@
 import ParkingGrid from "../../components/ParkingGrid";
 import ReservationModal from "../../components/ReservationModal";
-import { useState } from "react";
-
-// Mock data for demonstration
-const mockSpots = [
-  {
-    id: "1",
-    number: "A1",
-    isOccupied: false,
-    price: 5,
-    type: "standard",
-    level: 1,
-  },
-  {
-    id: "2",
-    number: "A2",
-    isOccupied: true,
-    price: 5,
-    type: "standard",
-    level: 1,
-  },
-  {
-    id: "3",
-    number: "A3",
-    isOccupied: false,
-    price: 7,
-    type: "electric",
-    level: 1,
-  },
-  {
-    id: "4",
-    number: "A4",
-    isOccupied: false,
-    price: 6,
-    type: "handicap",
-    level: 1,
-  },
-  {
-    id: "5",
-    number: "B1",
-    isOccupied: false,
-    price: 4,
-    type: "standard",
-    level: 2,
-  },
-  {
-    id: "6",
-    number: "B2",
-    isOccupied: false,
-    price: 4,
-    type: "standard",
-    level: 2,
-  },
-  {
-    id: "7",
-    number: "B3",
-    isOccupied: true,
-    price: 6,
-    type: "electric",
-    level: 2,
-  },
-  {
-    id: "8",
-    number: "B4",
-    isOccupied: false,
-    price: 5,
-    type: "standard",
-    level: 2,
-  },
-];
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export default function ParkingSpots() {
-  const [spots, setSpots] = useState(mockSpots);
+  const [spots, setSpots] = useState([]);
   const [selectedSpot, setSelectedSpot] = useState(null);
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const lotId = searchParams.get("id");
+    console.log(lotId);
+
+    async function fetchParkingSpots() {
+      // const response = await fetch(`http://localhost:8080/lots/${lotId}/spots`);
+      const response = await fetch(`http://localhost:3002/spots`);
+
+      const data = await response.json();
+      setSpots(data);
+      console.log(data);
+    }
+
+    fetchParkingSpots();
+  }, []);
 
   const handleSpotClick = (spot) => {
     if (!spot.isOccupied) {
@@ -94,7 +44,7 @@ export default function ParkingSpots() {
 
   return (
     <div>
-      <header className="mb-8">
+      <header className="m-8">
         <h1 className="text-2xl font-bold text-gray-900">
           Available Parking Spots
         </h1>

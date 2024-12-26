@@ -8,7 +8,7 @@ export default function Profile() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <header className="mb-8">
+      <header className="m-8">
         <h1 className="text-2xl font-bold text-gray-900">Profile Settings</h1>
         <p className="mt-1 text-gray-600">
           Manage your account settings and preferences

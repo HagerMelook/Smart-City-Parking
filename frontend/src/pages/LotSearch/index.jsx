@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import useGeolocation from "../../hooks/useGeoLocation";
@@ -8,8 +9,7 @@ import { MapPin } from "lucide-react";
 
 const BASE_URL = "https://nominatim.openstreetmap.org/search?";
 const customIcon = L.icon({
-  iconUrl:
-    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png", // Replace with your custom marker image URL
+  iconUrl: "src/assets/marker-icon-red.png", // Replace with your custom marker image URL
   iconSize: [25, 41], // Size of the icon
   iconAnchor: [12, 41], // Anchor point of the icon
   popupAnchor: [1, -34], // Popup anchor point
@@ -161,11 +161,15 @@ const MapWithSearch = () => {
                 parseFloat(selectedLocation.lon),
               ]}
             >
-              <Popup>{selectedLocation.display_name}</Popup>
+              <Popup>
+                <span>{selectedLocation.display_name}</span>
+              </Popup>
             </Marker>
           ) : (
             <Marker position={position}>
-              <Popup>Your current location</Popup>
+              <Popup>
+                <span>Your current location</span>
+              </Popup>
             </Marker>
           )}
           {parkingLots.map((lot) => (
@@ -174,7 +178,12 @@ const MapWithSearch = () => {
               position={[lot.latitude, lot.longitude]}
               icon={customIcon}
             >
-              <Popup>{lot.name}</Popup>
+              <Link to={`/parking-spots?id=${lot.id}`}>
+                <Popup interactive={true}>
+                  <h3>{lot.name}</h3>
+                  <span>Capacity: {lot.capacity}</span>
+                </Popup>
+              </Link>
             </Marker>
           ))}
           <ChangeView center={position} zoom={9} />
@@ -193,10 +202,10 @@ function ChangeView({ center, zoom }) {
   ];
 
   map.setMaxBounds(egyptBounds);
-
   map.on("drag", function () {
     map.panInsideBounds(egyptBounds, { animate: true });
   });
+
   return null;
 }
 
