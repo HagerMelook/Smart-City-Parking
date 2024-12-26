@@ -1,0 +1,100 @@
+{
+  "spots": [
+    {
+      "id": "1",
+      "available_periods": [
+        {
+          "start": "08:00:00",
+          "end": "20:00:00"
+        }
+      ],
+      "type": "regular",
+      "cost_per_hour": 5.0
+    },
+    {
+      "id": "2",
+      "available_periods": [
+        {
+          "start": "09:00:00",
+          "end": "18:00:00"
+        }
+      ],
+      "type": "regular",
+      "cost_per_hour": 4.5
+    },
+    {
+      "id": "3",
+      "available_periods": [
+        {
+          "start": "07:00:00",
+          "end": "22:00:00"
+        }
+      ],
+      "type": "disabled",
+      "cost_per_hour": 3.0
+    },
+    {
+      "id": "4",
+      "available_periods": [
+        {
+          "start": "06:00:00",
+          "end": "12:00:00"
+        },
+        {
+          "start": "14:00:00",
+          "end": "20:00:00"
+        }
+      ],
+      "type": "regular",
+      "cost_per_hour": 4.0
+    },
+    {
+      "id": "5",
+      "available_periods": [
+        {
+          "start": "10:00:00",
+          "end": "23:00:00"
+        }
+      ],
+      "type": "regular",
+      "cost_per_hour": 5.5
+    },
+    {
+      "id": "6",
+      "available_periods": [
+        {
+          "start": "08:30:00",
+          "end": "17:30:00"
+        }
+      ],
+      "type": "regular",
+      "cost_per_hour": 4.8
+    },
+    {
+      "id": "7",
+      "available_periods": [
+        {
+          "start": "00:00:00",
+          "end": "23:59:59"
+        }
+      ],
+      "type": "EV charging",
+      "cost_per_hour": 10.0
+    },
+    {
+      "id": "8",
+      "available_periods": [
+        {
+          "start": "10:10:00",
+          "end": "15:00:00"
+        },
+        {
+          "start": "19:00:00",
+          "end": "22:00:00"
+        }
+      ],
+      "type": "regular",
+      "cost_per_hour": 4.2
+    }
+  ]
+}
