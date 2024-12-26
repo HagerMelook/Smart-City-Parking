@@ -6,16 +6,10 @@ export default function ParkingGrid({ spots, onSpotClick }) {
     <div className="grid grid-cols-4 gap-4">
       {spots.map((spot, index) => (
         <button
-          key={spot.id}
+          key={spot.spot_id}
           onClick={() => onSpotClick(spot)}
-          disabled={spot.isOccupied}
           className={`
-            p-4 rounded-lg shadow-sm border-2 transition-all
-            ${
-              spot.isOccupied
-                ? "bg-gray-100 border-gray-200 cursor-not-allowed"
-                : "bg-white border-blue-200 hover:border-blue-400 hover:shadow-md"
-            }
+            p-4 rounded-lg shadow-sm border-2 transition-all bg-white border-blue-200 hover:border-blue-400 hover:shadow-md
           `}
         >
           {/* Header: Spot ID and Type Icon */}
@@ -30,27 +24,21 @@ export default function ParkingGrid({ spots, onSpotClick }) {
 
           {/* Spot Level */}
           <div className="text-sm text-gray-600">
-            Level {spot.level || "N/A"}
+            Level {(spot.number / 20 + 1).toFixed(0)}
           </div>
 
           {/* Cost Per Hour */}
-          <div className="mt-2 font-bold text-blue-600">
-            ${spot.cost_per_hour}/hr
-          </div>
+          <div className="mt-2 font-bold text-blue-600">${spot.price}/hr</div>
 
           {/* Availability Status */}
           <div className="mt-2 text-sm">
-            {spot.isOccupied ? (
-              <span className="text-red-500">Occupied</span>
-            ) : (
-              <span className="text-green-500">Available</span>
-            )}
+            {<span className="text-green-500">Available</span>}
           </div>
 
           {/* Available Periods */}
           <div className="mt-2 text-sm text-gray-600">
             <div>Available Periods:</div>
-            {spot.available_periods.map((period, idx) => (
+            {spot.availableHours.map((period, idx) => (
               <div key={idx}>
                 {period.start} - {period.end}
               </div>

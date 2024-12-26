@@ -10,17 +10,16 @@ export default function ReservationModal({ spot, onClose, onReserve }) {
   // Function to handle time calculation
   const calculateEndTime = (startTime, hours) => {
     if (!startTime) return "";
-    const startDate = new Date(`2024-01-01T${startTime}:00`);
+    const startDate = new Date(startTime);
     startDate.setHours(startDate.getHours() + hours);
-    const endTime = startDate.toTimeString().split(" ")[0];
-    setEndTime(endTime);
+
+    setEndTime(startDate.getTime());
   };
 
   // Function to validate if the start time is in the past
   const validateStartTime = (startTime) => {
     const currentTime = new Date();
-    const selectedTime = new Date(`2024-01-01T${startTime}:00`);
-    if (selectedTime < currentTime) {
+    if (startTime < currentTime.getMilliseconds()) {
       setError(
         "Selected start time is in the past. Please choose a future time."
       );
@@ -28,6 +27,18 @@ export default function ReservationModal({ spot, onClose, onReserve }) {
     }
     setError(""); // Reset error if the time is valid
     return true;
+  };
+
+  const handleStartTimeChange = (time) => {
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
+    const currentDay = new Date().getDate();
+
+    const selectedTime = new Date(
+      `${currentYear}-${currentMonth + 1}-${currentDay}T${time}:00`
+    );
+
+    setStartTime(selectedTime.getTime());
   };
 
   // Update end time when duration or start time changes
@@ -48,8 +59,10 @@ export default function ReservationModal({ spot, onClose, onReserve }) {
           </label>
           <input
             type="time"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
+            value={`${new Date(startTime).getHours()}:${new Date(
+              startTime
+            ).getMinutes()}`}
+            onChange={(e) => handleStartTimeChange(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
         </div>
@@ -70,24 +83,12 @@ export default function ReservationModal({ spot, onClose, onReserve }) {
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            End Time
-          </label>
-          <input
-            type="time"
-            value={endTime}
-            disabled
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-gray-100 cursor-not-allowed"
-          />
-        </div>
-
         <div className="mb-6">
           <div className="text-sm text-gray-600">
-            Price per hour: ${spot.cost_per_hour}
+            Price per hour: ${spot.price}
           </div>
           <div className="text-lg font-bold text-blue-600">
-            Total: ${(spot.cost_per_hour * hours).toFixed(2)}
+            Total: ${(spot.price * hours).toFixed(2)}
           </div>
         </div>
 
@@ -99,7 +100,7 @@ export default function ReservationModal({ spot, onClose, onReserve }) {
             Cancel
           </button>
           <button
-            onClick={() => onReserve(hours, startTime, endTime)}
+            onClick={() => onReserve(startTime, endTime)}
             disabled={error !== ""}
             className={`px-4 py-2 ${
               error

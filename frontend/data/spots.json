@@ -1,41 +1,41 @@
 {
   "spots": [
     {
-      "id": "1",
-      "available_periods": [
+      "spot_id": "1",
+      "availableHours": [
         {
           "start": "08:00:00",
           "end": "20:00:00"
         }
       ],
       "type": "regular",
-      "cost_per_hour": 5.0
+      "price": 5.0
     },
     {
-      "id": "2",
-      "available_periods": [
+      "spot_id": "2",
+      "availableHours": [
         {
           "start": "09:00:00",
           "end": "18:00:00"
         }
       ],
       "type": "regular",
-      "cost_per_hour": 4.5
+      "price": 4.5
     },
     {
-      "id": "3",
-      "available_periods": [
+      "spot_id": "3",
+      "availableHours": [
         {
           "start": "07:00:00",
           "end": "22:00:00"
         }
       ],
       "type": "disabled",
-      "cost_per_hour": 3.0
+      "price": 3.0
     },
     {
-      "id": "4",
-      "available_periods": [
+      "spot_id": "4",
+      "availableHours": [
         {
           "start": "06:00:00",
           "end": "12:00:00"
@@ -46,44 +46,44 @@
         }
       ],
       "type": "regular",
-      "cost_per_hour": 4.0
+      "price": 4.0
     },
     {
-      "id": "5",
-      "available_periods": [
+      "spot_id": "5",
+      "availableHours": [
         {
           "start": "10:00:00",
           "end": "23:00:00"
         }
       ],
       "type": "regular",
-      "cost_per_hour": 5.5
+      "price": 5.5
     },
     {
-      "id": "6",
-      "available_periods": [
+      "spot_id": "6",
+      "availableHours": [
         {
           "start": "08:30:00",
           "end": "17:30:00"
         }
       ],
       "type": "regular",
-      "cost_per_hour": 4.8
+      "price": 4.8
     },
     {
-      "id": "7",
-      "available_periods": [
+      "spot_id": "7",
+      "availableHours": [
         {
           "start": "00:00:00",
           "end": "23:59:59"
         }
       ],
       "type": "EV charging",
-      "cost_per_hour": 10.0
+      "price": 10.0
     },
     {
-      "id": "8",
-      "available_periods": [
+      "spot_id": "8",
+      "availableHours": [
         {
           "start": "10:10:00",
           "end": "15:00:00"
@@ -94,7 +94,7 @@
         }
       ],
       "type": "regular",
-      "cost_per_hour": 4.2
+      "price": 4.2
     }
   ]
 }
