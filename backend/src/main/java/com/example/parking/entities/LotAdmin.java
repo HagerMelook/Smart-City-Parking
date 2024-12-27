@@ -14,7 +14,7 @@ public class LotAdmin implements DBConnection{
                     email VARCHAR(80) UNIQUE NOT NULL,
                     password VARCHAR(80) NOT NULL,
                     lot_id INT,
-                    FOREIGN KEY (lot_id) REFERENCES parking_lots(lot_id)
+                    FOREIGN KEY (lot_id) REFERENCES parking_lots(lot_id);
                     FOREIGN KEY (lot_admin_id) REFERENCES user(user_id)
                 )
                 """;
