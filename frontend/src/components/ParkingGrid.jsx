@@ -15,7 +15,7 @@ export default function ParkingGrid({ spots, onSpotClick }) {
           {/* Header: Spot ID and Type Icon */}
           <div className="flex items-center justify-between mb-2">
             <span className="text-lg font-semibold">#{index + 1}</span>
-            {spot.type === "EV charging" && <Zap className="text-green-600" />}
+            {spot.type === "ev_charging" && <Zap className="text-green-600" />}
             {spot.type === "regular" && <Car className="text-gray-600" />}
             {spot.type === "disabled" && (
               <Accessibility className="text-blue-600" />
@@ -32,7 +32,11 @@ export default function ParkingGrid({ spots, onSpotClick }) {
 
           {/* Availability Status */}
           <div className="mt-2 text-sm">
-            {<span className="text-green-500">Available</span>}
+            {spot.status == "reserved" ? (
+              <span className="text-red-500">Occupied</span>
+            ) : (
+              <span className="text-green-500">Available</span>
+            )}
           </div>
 
           {/* Available Periods */}

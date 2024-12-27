@@ -78,7 +78,7 @@
           "end": "23:59:59"
         }
       ],
-      "type": "EV charging",
+      "type": "ev_charging",
       "price": 10.0
     },
     {

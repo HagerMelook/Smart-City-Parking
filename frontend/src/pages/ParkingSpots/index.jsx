@@ -8,6 +8,19 @@ export default function ParkingSpots() {
   const [selectedSpot, setSelectedSpot] = useState(null);
   // const [searchParams] = useSearchParams();
 
+  function formatDate(milliseconds) {
+    const date = new Date(milliseconds);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+
   useEffect(() => {
     // const lotId = searchParams.get("id");
 
@@ -34,7 +47,7 @@ export default function ParkingSpots() {
   };
 
   const handleReservation = async (startTime, endTime) => {
-    if (selectedSpot) {
+    if (selectedSpot && startTime && endTime) {
       try {
         const response = await fetch(
           `http://localhost:8080/spots/${selectedSpot.spot_id}/reserve`,
@@ -44,10 +57,10 @@ export default function ParkingSpots() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              driver_id: 1, // Replace with dynamic driver ID if available
+              driver_id: localStorage.getItem("userId"),
               spot_id: selectedSpot.spot_id,
-              start_time: startTime,
-              end_time: endTime,
+              start_time: formatDate(startTime),
+              end_time: formatDate(endTime),
             }),
           }
         );

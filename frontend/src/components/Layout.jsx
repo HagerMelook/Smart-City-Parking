@@ -6,7 +6,10 @@ import {
   Settings,
   User,
   ParkingCircle,
+  Text,
 } from "lucide-react";
+
+import { Notifications } from "@mui/icons-material";
 import proptype from "prop-types";
 
 export default function Layout({ children }) {
@@ -47,6 +50,24 @@ export default function Layout({ children }) {
             icon={<User />}
             text="Profile"
             active={location.pathname === "/profile"}
+          />
+          <NavItem
+            to="/notifications"
+            icon={<Notifications />}
+            text="Notifications"
+            active={location.pathname === "/notifications"}
+          />
+          <NavItem
+            to="/reservations"
+            icon={<Text />}
+            text="Reservations"
+            active={location.pathname === "/reservations"}
+          />
+          <NavItem
+            to="/lot-dashboard"
+            icon={<LayoutDashboard />}
+            text="Lot Dashboard"
+            active={location.pathname === "/lot-dashboard"}
           />
           <NavItem
             to="/settings"

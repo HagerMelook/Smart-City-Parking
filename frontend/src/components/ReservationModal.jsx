@@ -59,9 +59,13 @@ export default function ReservationModal({ spot, onClose, onReserve }) {
           </label>
           <input
             type="time"
-            value={`${new Date(startTime).getHours()}:${new Date(
-              startTime
-            ).getMinutes()}`}
+            value={`${
+              (new Date(startTime).getHours() >= 10 ? "" : "0") +
+              new Date(startTime).getHours()
+            }:${
+              (new Date(startTime).getMinutes() >= 10 ? "" : "0") +
+              new Date(startTime).getMinutes()
+            }`}
             onChange={(e) => handleStartTimeChange(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
