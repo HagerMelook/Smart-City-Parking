@@ -1,78 +1,44 @@
 import ParkingGrid from "../../components/ParkingGrid";
 import ReservationModal from "../../components/ReservationModal";
-import { useState } from "react";
-
-// Mock data for demonstration
-const mockSpots = [
-  {
-    id: "1",
-    number: "A1",
-    isOccupied: false,
-    price: 5,
-    type: "standard",
-    level: 1,
-  },
-  {
-    id: "2",
-    number: "A2",
-    isOccupied: true,
-    price: 5,
-    type: "standard",
-    level: 1,
-  },
-  {
-    id: "3",
-    number: "A3",
-    isOccupied: false,
-    price: 7,
-    type: "electric",
-    level: 1,
-  },
-  {
-    id: "4",
-    number: "A4",
-    isOccupied: false,
-    price: 6,
-    type: "handicap",
-    level: 1,
-  },
-  {
-    id: "5",
-    number: "B1",
-    isOccupied: false,
-    price: 4,
-    type: "standard",
-    level: 2,
-  },
-  {
-    id: "6",
-    number: "B2",
-    isOccupied: false,
-    price: 4,
-    type: "standard",
-    level: 2,
-  },
-  {
-    id: "7",
-    number: "B3",
-    isOccupied: true,
-    price: 6,
-    type: "electric",
-    level: 2,
-  },
-  {
-    id: "8",
-    number: "B4",
-    isOccupied: false,
-    price: 5,
-    type: "standard",
-    level: 2,
-  },
-];
+import { useState, useEffect } from "react";
+// import { useSearchParams } from "react-router-dom";
 
 export default function ParkingSpots() {
-  const [spots, setSpots] = useState(mockSpots);
+  const [spots, setSpots] = useState([]);
   const [selectedSpot, setSelectedSpot] = useState(null);
+  // const [searchParams] = useSearchParams();
+
+  function formatDate(milliseconds) {
+    const date = new Date(milliseconds);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+
+  useEffect(() => {
+    // const lotId = searchParams.get("id");
+
+    async function fetchParkingSpots() {
+      // const response = await fetch(`http://localhost:8080/lots/${lotId}/spots`);
+      const response = await fetch(`http://localhost:3002/spots`);
+      const data = await response.json();
+
+      const spotsWithNumbers = data.map((spot, index) => ({
+        ...spot,
+        number: index + 1,
+      }));
+
+      setSpots(spotsWithNumbers);
+    }
+
+    fetchParkingSpots();
+  }, []);
 
   const handleSpotClick = (spot) => {
     if (!spot.isOccupied) {
@@ -80,21 +46,45 @@ export default function ParkingSpots() {
     }
   };
 
-  const handleReservation = (hours) => {
-    if (selectedSpot) {
-      setSpots(
-        spots.map((spot) =>
-          spot.id === selectedSpot.id ? { ...spot, isOccupied: true } : spot
-        )
-      );
-      setSelectedSpot(null);
-      alert(`Spot ${selectedSpot.number} reserved for ${hours} hours!`);
+  const handleReservation = async (startTime, endTime) => {
+    if (selectedSpot && startTime && endTime) {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/spots/${selectedSpot.spot_id}/reserve`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              driver_id: localStorage.getItem("userId"),
+              spot_id: selectedSpot.spot_id,
+              start_time: formatDate(startTime),
+              end_time: formatDate(endTime),
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+
+        console.log(
+          `Spot ${selectedSpot.number} reserved from ${startTime} to ${endTime}!`
+        );
+
+        setSelectedSpot(null); // Reset state after successful reservation
+      } catch (error) {
+        console.error("Failed to reserve spot:", error);
+      }
+    } else {
+      console.warn("No spot selected for reservation.");
     }
   };
 
   return (
     <div>
-      <header className="mb-8">
+      <header className="m-8">
         <h1 className="text-2xl font-bold text-gray-900">
           Available Parking Spots
         </h1>

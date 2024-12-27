@@ -1,34 +1,66 @@
-import proptype from "prop-types";
+import { Card, CardContent, Typography } from "@mui/material";
+import PropTypes from "prop-types";
 
-export default function StatCard({ title, value, icon: Icon, trend }) {
+const StatCard = ({ title, value, icon: Icon, trend }) => {
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-gray-600">{title}</p>
-          <h3 className="text-2xl font-bold mt-1">{value}</h3>
-          {trend && (
-            <p
-              className={`text-sm mt-2 ${
-                trend.isPositive ? "text-green-600" : "text-red-600"
-              }`}
+    <Card>
+      <CardContent>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+          }}
+        >
+          <div>
+            <Typography variant="subtitle2" color="textSecondary">
+              {title}
+            </Typography>
+            <Typography
+              variant="h4"
+              component="div"
+              sx={{ mt: 1, fontWeight: "bold" }}
             >
-              {trend.isPositive ? "↑" : "↓"} {Math.abs(trend.value)}%
-            </p>
+              {value}
+            </Typography>
+            {trend && (
+              <Typography
+                variant="body2"
+                sx={{
+                  mt: 1,
+                  color: trend.isPositive ? "success.main" : "error.main",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 0.5,
+                }}
+              >
+                {trend.isPositive ? "↑" : "↓"} {Math.abs(trend.value)}%
+              </Typography>
+            )}
+          </div>
+          {Icon && (
+            <Icon
+              sx={{
+                width: 32,
+                height: 32,
+                color: "primary.main",
+              }}
+            />
           )}
         </div>
-        <Icon className="w-8 h-8 text-blue-600" />
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
-}
+};
 
 StatCard.propTypes = {
-  title: proptype.string.isRequired,
-  value: proptype.oneOfType([proptype.string, proptype.number]).isRequired,
-  icon: proptype.elementType.isRequired,
-  trend: proptype.shape({
-    value: proptype.number.isRequired,
-    isPositive: proptype.bool,
+  title: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  icon: PropTypes.elementType,
+  trend: PropTypes.shape({
+    value: PropTypes.number.isRequired,
+    isPositive: PropTypes.bool.isRequired,
   }),
 };
+
+export default StatCard;

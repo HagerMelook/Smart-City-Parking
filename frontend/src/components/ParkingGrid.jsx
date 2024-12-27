@@ -1,52 +1,52 @@
-import { Car, Zap } from "lucide-react";
+import { Car, Zap, Accessibility } from "lucide-react";
 import proptype from "prop-types";
-
-const WheelchairIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className="w-6 h-6"
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" d="M..." />
-  </svg>
-);
 
 export default function ParkingGrid({ spots, onSpotClick }) {
   return (
     <div className="grid grid-cols-4 gap-4">
-      {spots.map((spot) => (
+      {spots.map((spot, index) => (
         <button
-          key={spot.id}
+          key={spot.spot_id}
           onClick={() => onSpotClick(spot)}
-          disabled={spot.isOccupied}
           className={`
-            p-4 rounded-lg shadow-sm border-2 transition-all
-            ${
-              spot.isOccupied
-                ? "bg-gray-100 border-gray-200 cursor-not-allowed"
-                : "bg-white border-blue-200 hover:border-blue-400 hover:shadow-md"
-            }
+            p-4 rounded-lg shadow-sm border-2 transition-all bg-white border-blue-200 hover:border-blue-400 hover:shadow-md
           `}
         >
+          {/* Header: Spot ID and Type Icon */}
           <div className="flex items-center justify-between mb-2">
-            <span className="text-lg font-semibold">#{spot.number}</span>
-            {spot.type === "handicap" && (
-              <WheelchairIcon className="text-blue-600" />
+            <span className="text-lg font-semibold">#{index + 1}</span>
+            {spot.type === "ev_charging" && <Zap className="text-green-600" />}
+            {spot.type === "regular" && <Car className="text-gray-600" />}
+            {spot.type === "disabled" && (
+              <Accessibility className="text-blue-600" />
             )}
-            {spot.type === "electric" && <Zap className="text-green-600" />}
-            {spot.type === "standard" && <Car className="text-gray-600" />}
           </div>
-          <div className="text-sm text-gray-600">Level {spot.level}</div>
+
+          {/* Spot Level */}
+          <div className="text-sm text-gray-600">
+            Level {(spot.number / 20 + 1).toFixed(0)}
+          </div>
+
+          {/* Cost Per Hour */}
           <div className="mt-2 font-bold text-blue-600">${spot.price}/hr</div>
+
+          {/* Availability Status */}
           <div className="mt-2 text-sm">
-            {spot.isOccupied ? (
+            {spot.status == "reserved" ? (
               <span className="text-red-500">Occupied</span>
             ) : (
               <span className="text-green-500">Available</span>
             )}
+          </div>
+
+          {/* Available Periods */}
+          <div className="mt-2 text-sm text-gray-600">
+            <div>Available Periods:</div>
+            {spot.availableHours.map((period, idx) => (
+              <div key={idx}>
+                {period.start} - {period.end}
+              </div>
+            ))}
           </div>
         </button>
       ))}
@@ -55,6 +55,20 @@ export default function ParkingGrid({ spots, onSpotClick }) {
 }
 
 ParkingGrid.propTypes = {
-  spots: proptype.array.isRequired,
+  spots: proptype.arrayOf(
+    proptype.shape({
+      id: proptype.string.isRequired,
+      type: proptype.string.isRequired,
+      cost_per_hour: proptype.number.isRequired,
+      isOccupied: proptype.bool.isRequired,
+      level: proptype.number,
+      available_periods: proptype.arrayOf(
+        proptype.shape({
+          start: proptype.string.isRequired,
+          end: proptype.string.isRequired,
+        })
+      ).isRequired,
+    })
+  ).isRequired,
   onSpotClick: proptype.func.isRequired,
 };
