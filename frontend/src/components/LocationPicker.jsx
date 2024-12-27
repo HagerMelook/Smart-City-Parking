@@ -3,27 +3,14 @@ import LeafletMap from "./LeafletMap";
 import proptypes from "prop-types";
 
 export default function LocationPicker({ onChange }) {
-  const [position, setPosition] = React.useState([40.7128, -74.006]); // Default to NYC
+  const [position, setPosition] = React.useState([40.7128, -74.006]); 
 
-  const handlePositionChange = async (newPosition) => {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${newPosition[0]}&lon=${newPosition[1]}&format=json`
-      );
-      const data = await response.json();
-
-      const address = data.address;
-      onChange({
-        street: `${address.house_number || ""} ${address.road || ""}`.trim(),
-        city: address.city || address.town || address.village || "",
-        state: address.state || "",
-        zipCode: address.postcode || "",
-        country: "United States",
-      });
-      setPosition(newPosition);
-    } catch (error) {
-      console.error("Error fetching address:", error);
-    }
+  const handlePositionChange = (newPosition) => {
+    setPosition(newPosition); 
+    onChange({
+      latitude: newPosition[0],
+      longitude: newPosition[1],
+    }); 
   };
 
   return (
@@ -37,6 +24,6 @@ export default function LocationPicker({ onChange }) {
 }
 
 LocationPicker.propTypes = {
-  value: proptypes.object,
-  onChange: proptypes.func,
+  onChange: proptypes.func.isRequired, 
 };
+

@@ -1,16 +1,45 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-export default function LoginForm() {
+export default function LoginForm({onLogin}) {
   const [formData, setFormData] = React.useState({
     email: "",
     password: "",
   });
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // TODO: Implement login logic
     console.log("Login:", formData);
+
+    try {
+      const response = await fetch("https://8080/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Logged in up successfully:", result);
+
+        localStorage.setItem("userType", result.userType);
+        localStorage.setItem("userId", result.userId);
+        onLogin();
+        navigate("/dashboard");
+
+      } else {
+        const error = await response.json();
+        console.error("Error during signup:", error);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+
   };
 
   return (
@@ -59,3 +88,7 @@ export default function LoginForm() {
     </form>
   );
 }
+
+LoginForm.propTypes = {
+  onLogin: PropTypes.func.isRequired,
+};

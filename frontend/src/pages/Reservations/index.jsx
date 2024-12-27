@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -22,35 +23,56 @@ import {
 import StatCard from "../Dashboard/components/StatCard";
 
 export default function ReservationsPage() {
-  const reservations = [
-    {
-      id: 1,
-      spotId: "A1",
-      vehicleNo: "ABC123",
-      status: "active",
-      startTime: "2024-12-27 10:00 AM",
-      endTime: "2024-12-27 12:00 PM",
-      customerName: "John Doe",
-    },
-    {
-      id: 2,
-      spotId: "B3",
-      vehicleNo: "XYZ789",
-      status: "upcoming",
-      startTime: "2024-12-27 02:00 PM",
-      endTime: "2024-12-27 04:00 PM",
-      customerName: "Jane Smith",
-    },
-    {
-      id: 3,
-      spotId: "C2",
-      vehicleNo: "DEF456",
-      status: "completed",
-      startTime: "2024-12-27 08:00 AM",
-      endTime: "2024-12-27 09:30 AM",
-      customerName: "Mike Johnson",
-    },
-  ];
+  const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        const response = await fetch("https://localhost:8080/reservations", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setReservations(data);
+        } else {
+          const errorData = await response.json();
+          setError(errorData.message || "Failed to fetch reservations.");
+        }
+      } catch (err) {
+        setError(err.message || "Network error.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReservations();
+  }, []);
+
+  if (loading) {
+    return (
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          Loading Reservations...
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          Error: {error}
+        </Typography>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
