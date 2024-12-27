@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-export default function DriverSignUpForm() {
+export default function DriverSignUpForm({onLogin}) {
   const [formData, setFormData] = React.useState({
     name: "",
     email: "",
@@ -14,10 +16,38 @@ export default function DriverSignUpForm() {
     },
   });
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement signup logic
     console.log("Driver signup:", formData);
+
+    try {
+      const response = await fetch("https://8080/signup/driver", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Driver signed up successfully:", result);
+
+        localStorage.setItem("userType", "driver");
+        localStorage.setItem("userId", result.userId);
+        onLogin();
+        navigate("/dashboard"); 
+
+      } else {
+        const error = await response.json();
+        console.error("Error during signup:", error);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+
   };
 
   return (
@@ -185,3 +215,7 @@ export default function DriverSignUpForm() {
     </form>
   );
 }
+
+DriverSignUpForm.propTypes = {
+  onLogin: PropTypes.func.isRequired,
+};

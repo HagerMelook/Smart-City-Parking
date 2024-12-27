@@ -1,7 +1,9 @@
 import React from "react";
 import LocationPicker from "../LocationPicker";
+import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-export default function LotAdminSignUpForm() {
+export default function LotAdminSignUpForm({onLogin}) {
   const [formData, setFormData] = React.useState({
     name: "",
     email: "",
@@ -14,13 +16,40 @@ export default function LotAdminSignUpForm() {
       disabled: 0,
       evCharging: 0,
     },
-    costPerHour: 0,
   });
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // TODO: Implement signup logic
     console.log("Lot admin signup:", formData);
+    console.log(formData.lotLocation)
+    try {
+      const response = await fetch("https://8080/signup/lot-admin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log("manager signed up successfully:", result);
+
+        localStorage.setItem("userType", "lot-admin");
+        localStorage.setItem("userId", result.userId);
+        onLogin();
+        navigate("/dashboard");
+
+      } else {
+        const error = await response.json();
+        console.error("Error during signup:", error);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+
   };
 
   return (
@@ -90,7 +119,13 @@ export default function LotAdminSignUpForm() {
         <LocationPicker
           value={formData.lotLocation}
           onChange={(location) =>
-            setFormData((prev) => ({ ...prev, lotLocation: location }))
+            setFormData((prev) => ({
+              ...prev,
+              lotLocation: {
+                latitude: location.latitude,
+                longitude: location.longitude,
+              },
+            }))
           }
         />
       </div>
@@ -188,27 +223,6 @@ export default function LotAdminSignUpForm() {
       </div>
 
       <div>
-        <label htmlFor="costPerHour" className="label">
-          Cost per Hour ($)
-        </label>
-        <input
-          id="costPerHour"
-          type="number"
-          required
-          min="0"
-          step="0.01"
-          className="input"
-          value={formData.costPerHour}
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              costPerHour: parseFloat(e.target.value),
-            })
-          }
-        />
-      </div>
-
-      <div>
         <button type="submit" className="btn btn-primary w-full">
           Sign up as Lot Admin
         </button>
@@ -216,3 +230,7 @@ export default function LotAdminSignUpForm() {
     </form>
   );
 }
+
+LotAdminSignUpForm.propTypes = {
+  onLogin: PropTypes.func.isRequired,
+};
