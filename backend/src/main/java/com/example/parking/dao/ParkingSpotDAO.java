@@ -10,7 +10,9 @@ import java.util.List;
 
 import com.example.parking.dto.ParkingSpotDTO;
 import com.example.parking.entities.DBConnection;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ParkingSpotDAO implements DBConnection {
     public int insertSpot(int lot_id, String type) {
         String insertSQL = "INSERT INTO parking_spots (lot_id, type) VALUES (?, ?)";

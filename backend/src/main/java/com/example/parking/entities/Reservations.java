@@ -14,7 +14,7 @@ public class Reservations implements DBConnection {
                     spot_id INT NOT NULL,
                     start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     end_time TIMESTAMP,
-                    status ENUM('active','confirmed', 'expired', 'canceled') DEFAULT 'active',
+                    status ENUM('active','confirmed', 'expired', 'cancelled') DEFAULT 'active',
                     penalty DECIMAL(10, 2) DEFAULT 0,
                     FOREIGN KEY (driver_id) REFERENCES driver(driver_id),
                     FOREIGN KEY (spot_id) REFERENCES parking_spots(spot_id)
@@ -83,7 +83,7 @@ public class Reservations implements DBConnection {
                 AFTER UPDATE ON reservations
                 FOR EACH ROW
                 BEGIN
-                    IF  NEW.status = 'canceled' THEN
+                    IF  NEW.status = 'cancelled' THEN
                         UPDATE parking_spots
                         SET status = 'available'
                         WHERE spot_id = NEW.spot_id;

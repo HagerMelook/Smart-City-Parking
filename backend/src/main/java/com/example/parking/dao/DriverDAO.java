@@ -117,7 +117,7 @@ public class DriverDAO implements DBConnection {
         return exist;
     }
 
-    public DriverDTO gettDriverById(int driverId) {
+    public DriverDTO getDriverById(int driverId) {
         String selectSQL = "SELECT * FROM driver WHERE driver_id = ?";
         DriverDTO driver = new DriverDTO();
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
