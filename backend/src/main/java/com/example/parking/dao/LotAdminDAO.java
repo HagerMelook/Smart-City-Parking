@@ -10,14 +10,17 @@ import com.example.parking.dto.LotAdminDTO;
 import com.example.parking.entities.DBConnection;
 
 public class LotAdminDAO implements DBConnection {
-    public int insertLotAdmin(String name, int lot_id) {
-        String insertSQL = "INSERT INTO lot_admin (name, lot_id) VALUES (?, ?)";
+    public int insertLotAdmin(LotAdminDTO lot_admin) {
+        String insertSQL = "INSERT INTO lot_admin (lot_admin_id,full_name, email, password, lot_id) VALUES (?, ?, ?, ?, ?)";
         int generatedId = 0;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
 
-            preparedStatement.setString(1, name);
-            preparedStatement.setInt(2, lot_id);
+            preparedStatement.setInt(1, lot_admin.getLot_admin_id());
+            preparedStatement.setString(2, lot_admin.getFull_name());
+            preparedStatement.setString(3, lot_admin.getEmail());
+            preparedStatement.setString(4, lot_admin.getPassword());
+            preparedStatement.setInt(5, lot_admin.getLot_id());
 
             int rowsAffected = preparedStatement.executeUpdate();
             System.out.println("Insert completed. Rows affected: " + rowsAffected);
@@ -42,7 +45,7 @@ public class LotAdminDAO implements DBConnection {
     }
 
     public String updateLotAdminName(int lot_admin_Id, String name) {
-        String updateSQL = "UPDATE lot_admin SET name = ? WHERE lot_admin_id = ?";
+        String updateSQL = "UPDATE lot_admin SET full_name = ? WHERE lot_admin_id = ?";
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(updateSQL)) {
@@ -70,7 +73,9 @@ public class LotAdminDAO implements DBConnection {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     lotAdmin.setLot_admin_id(lot_admin_Id);
-                    lotAdmin.setName(resultSet.getString("name"));
+                    lotAdmin.setFull_name(resultSet.getString("full_name"));
+                    lotAdmin.setEmail(resultSet.getString("email"));
+                    lotAdmin.setPassword(resultSet.getString("password"));
                     lotAdmin.setLot_id(resultSet.getInt("lot_id"));
                 } else {
                     System.out.println("No lot_admin found with ID: " + lot_admin_Id);

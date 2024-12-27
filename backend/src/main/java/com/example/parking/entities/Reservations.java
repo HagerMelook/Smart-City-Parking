@@ -14,7 +14,7 @@ public class Reservations implements DBConnection {
                     spot_id INT NOT NULL,
                     start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     end_time TIMESTAMP,
-                    status ENUM('active','confirmed', 'expired', 'canceled') DEFAULT 'active',
+                    status ENUM('active','confirmed', 'expired', 'cancelled') DEFAULT 'active',
                     penalty DECIMAL(10, 2) DEFAULT 0,
                     FOREIGN KEY (driver_id) REFERENCES driver(driver_id),
                     FOREIGN KEY (spot_id) REFERENCES parking_spots(spot_id)
@@ -33,15 +33,15 @@ public class Reservations implements DBConnection {
     }
 
     public void createTriggers() {
-        String applyPenaltyTrigger = """
-                CREATE TRIGGER apply_penalty
-                BEFORE INSERT ON reservations
-                FOR EACH ROW
-                BEGIN
-                    SET NEW.end_time = DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 2 HOUR);
-                    SET NEW.penalty = (SELECT price * 2 FROM parking_spots WHERE spot_id = NEW.spot_id);
-                END;
-                """;
+        // String applyPenaltyTrigger = """
+        //         CREATE TRIGGER apply_penalty
+        //         BEFORE INSERT ON reservations
+        //         FOR EACH ROW
+        //         BEGIN
+        //             SET NEW.end_time = DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 2 HOUR);
+        //             SET NEW.penalty = (SELECT price * 2 FROM parking_spots WHERE spot_id = NEW.spot_id);
+        //         END;
+        //         """;
 
         String updateSpotStatus = """
                 CREATE TRIGGER update_spot
@@ -83,7 +83,7 @@ public class Reservations implements DBConnection {
                 AFTER UPDATE ON reservations
                 FOR EACH ROW
                 BEGIN
-                    IF  NEW.status = 'canceled' THEN
+                    IF  NEW.status = 'cancelled' THEN
                         UPDATE parking_spots
                         SET status = 'available'
                         WHERE spot_id = NEW.spot_id;
@@ -117,7 +117,7 @@ public class Reservations implements DBConnection {
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 Statement statement = connection.createStatement()) {
 
-            statement.executeUpdate(applyPenaltyTrigger);
+            //statement.executeUpdate(applyPenaltyTrigger);
             statement.executeUpdate(updateSpotStatus);
             statement.executeUpdate(createEventQuery);
             statement.executeUpdate(cancelledStatusTrigger);

@@ -8,38 +8,41 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.example.parking.dto.ParkingSpotDTO;
 import com.example.parking.entities.DBConnection;
 
+@Repository
 public class ParkingSpotDAO implements DBConnection {
-    public int insertSpot(int lot_id, String type) {
-        String insertSQL = "INSERT INTO parking_spots (lot_id, type) VALUES (?, ?)";
-        int generatedId = 0;
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
+    // public int insertSpot(int lot_id, String type) {
+    //     String insertSQL = "INSERT INTO parking_spots (lot_id, type) VALUES (?, ?)";
+    //     int generatedId = 0;
+    //     try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+    //             PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
 
-            preparedStatement.setInt(1, lot_id);
-            preparedStatement.setString(2, type);
-            int rowsAffected = preparedStatement.executeUpdate();
-            System.out.println("Insert completed. Rows affected: " + rowsAffected);
+    //         preparedStatement.setInt(1, lot_id);
+    //         preparedStatement.setString(2, type);
+    //         int rowsAffected = preparedStatement.executeUpdate();
+    //         System.out.println("Insert completed. Rows affected: " + rowsAffected);
 
-            if (rowsAffected > 0) {
-                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        generatedId = generatedKeys.getInt("spot_id");
-                        System.out.println("Inserted row ID: " + generatedId);
-                    } else {
-                        System.out.println("No ID was returned.");
-                    }
-                }
-            } else {
-                System.out.println("Insert failed, no rows affected.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return generatedId;
-    }
+    //         if (rowsAffected > 0) {
+    //             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+    //                 if (generatedKeys.next()) {
+    //                     generatedId = generatedKeys.getInt("spot_id");
+    //                     System.out.println("Inserted row ID: " + generatedId);
+    //                 } else {
+    //                     System.out.println("No ID was returned.");
+    //                 }
+    //             }
+    //         } else {
+    //             System.out.println("Insert failed, no rows affected.");
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return generatedId;
+    // }
 
     public String updateSpotStatue(int spot_id, String status) {
         String updateSQL = "UPDATE parking_spots SET status = ? WHERE spot_id = ?";

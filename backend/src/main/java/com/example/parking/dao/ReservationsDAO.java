@@ -11,22 +11,27 @@ import java.util.List;
 
 import com.example.parking.dto.ReservationDTO;
 import com.example.parking.entities.DBConnection;
+import com.example.parking.entities.Reservations;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ReservationsDAO implements DBConnection {
-    public int insertResv(int spot_id, int driver_id) {
-        String insertSQL = "INSERT INTO reservations (spot_id, driver_id) VALUES (?, ?)";
+    public int insertResv(int spot_id, ReservationDTO reservation) {
+        String insertSQL = "INSERT INTO reservations (spot_id, driver_id, start_time, end_time) VALUES (?, ?, ?, ?)";
         int generatedId = 0;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
+                PreparedStatement preparedStatement = connection.prepareStatement(insertSQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, spot_id);
-            preparedStatement.setInt(2, driver_id);
+            preparedStatement.setInt(2, reservation.getDriver_id());
+            preparedStatement.setTimestamp(3, reservation.getStart_time());
+            preparedStatement.setTimestamp(4, reservation.getEnd_time());
             int rowsAffected = preparedStatement.executeUpdate();
             System.out.println("Insert completed. Rows affected: " + rowsAffected);
 
             if (rowsAffected > 0) {
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        generatedId = generatedKeys.getInt("resv_id");
+                        generatedId = generatedKeys.getInt(1);
                         System.out.println("Inserted row ID: " + generatedId);
                     } else {
                         System.out.println("No ID was returned.");
@@ -41,7 +46,7 @@ public class ReservationsDAO implements DBConnection {
         return generatedId;
     }
 
-    public String updateResvStatue(int resv_id, String status) {
+    public String updateResvStatus(int resv_id, String status) {
         String updateSQL = "UPDATE reservations SET status = ? WHERE resv_id = ?";
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -124,6 +129,9 @@ public class ReservationsDAO implements DBConnection {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     reservation = new ReservationDTO();
+                    if (resultSet.getString("status").equals("expired") || resultSet.getString("status").equals("cancelled")) {
+                        continue;
+                    }
                     reservation.setResv_id(resultSet.getInt("resv_id"));
                     reservation.setDriver_id(resultSet.getInt("driver_id"));
                     reservation.setSpot_id(spot_id);
@@ -192,4 +200,38 @@ public class ReservationsDAO implements DBConnection {
         }
         return reservation;
     }
+
+    public String numberOfReservationsAndRevenueForSpotLastInterval(int spotId, int index) {
+//        Index is an indicator with 1 for day, 2 for month, 3 for year
+        String selectSQL = "SELECT COUNT(*) as reserved, SUM(penalty) as penalties FROM reservations " +
+                "WHERE spot_id= ? AND status <> 'cancelled' AND YEAR(start_time) = YEAR(CURDATE()) ";
+        switch (index){
+            case 1:
+                selectSQL += "AND DAY(start_time) = DAY(CURDATE()) AND MONTH(start_time) = MONTH(CURDATE())";
+                break;
+            case 2:
+                selectSQL += "AND MONTH(start_time) = MONTH(CURDATE()) ";
+                break;
+            default:
+                break;
+        }
+
+        int count = 0;
+        long penalties=0;
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+            preparedStatement.setInt(1, spotId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    count = resultSet.getInt("reserved");
+                    penalties = resultSet.getInt("penalties");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return (count+" "+penalties);
+    }
+
 }
