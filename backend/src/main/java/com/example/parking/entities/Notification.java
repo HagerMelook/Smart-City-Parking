@@ -9,11 +9,11 @@ public class Notification implements DBConnection{
         public void createTable() {
         String createTableSQL = """
                 CREATE TABLE notification (
-                    notification_id INT AUTO INCREMENT PRIMARY KEY,
+                    notification_id INT AUTO_INCREMENT PRIMARY KEY,
                     user_id INT NOT NULL,
                     type VARCHAR(50),
                     msg VARCHAR(500),
-                    time TIMESTAMP DEFAULT CURRENT TIMESTAMP,
+                    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (user_id) REFERENCES user(user_id)
                 )
                 """;
