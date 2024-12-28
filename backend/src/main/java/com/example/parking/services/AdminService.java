@@ -45,10 +45,10 @@ public class AdminService {
         List<TopUsersReport> top = new ArrayList<>();
         for (TopUsersDTO user : topUsers) {
             DriverDTO driver = driverDAO.getDriverById(user.getDriver_id());
-            top.add(new TopUsersReport(driver.getName(), user.getNumber_of_resv(), driver.getLicense_plate()));
+            top.add(new TopUsersReport(driver.getFull_name(), user.getNumber_of_resvs(), driver.getLicense_plate()));
         }
 
-        String path = "D:\\Current\\Database\\Project\\Smart-City-Parking\\backend\\src\\main\\resources\\topUsers.html";
+        String path = "backend\\src\\main\\resources\\topUsers.html";
         Map<String, Object> params = new HashMap<>();
         params.put("Report Owner", "System Admin");
         File file = ResourceUtils.getFile("classpath:topUsers.jrxml");
@@ -67,7 +67,7 @@ public class AdminService {
             top.add(new TopLotsReport(parkingLot.getName(), lot.getRevenue(), parkingLot.getCapacity()));
         }
 
-        String path = "D:\\Current\\Database\\Project\\Smart-City-Parking\\backend\\src\\main\\resources\\topLots.html";
+        String path = "backend\\src\\main\\resources\\topLots.html";
         Map<String, Object> params = new HashMap<>();
         params.put("Report Owner", "System Admin");
         File file = ResourceUtils.getFile("classpath:topLots.jrxml");
