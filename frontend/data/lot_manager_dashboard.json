@@ -1,0 +1,27 @@
+{
+  "lot_manager_dashboard": {
+    "spots": [
+      {
+        "spot_id": 1,
+        "status": "reserved",
+        "start_time": "2021-01-01T12:00:00",
+        "end_time": "2021-01-01T13:00:00",
+        "car_plate": "ABC123"
+      },
+      {
+        "spot_id": 2,
+        "status": "reserved",
+        "start_time": "2021-01-01T12:00:00",
+        "end_time": "2021-01-01T13:00:00",
+        "car_plate": "DEF456"
+      },
+      {
+        "spot_id": 3,
+        "status": "available"
+      }
+    ],
+    "revenue_today": 1234.0,
+    "revenue_month": 12345.0,
+    "revenue_year": 123456.0
+  }
+}

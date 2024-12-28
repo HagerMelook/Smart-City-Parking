@@ -1,0 +1,40 @@
+{
+  "admin_dashboard": {
+    "top_lots": [
+      {
+        "name": "Alex Lot",
+        "revenue": 1000.5
+      },
+      {
+        "name": "Cairo Lot",
+        "revenue": 2000.5
+      },
+      {
+        "name": "GiZa Lot",
+        "revenue": 3000.5
+      }
+    ],
+    "top_users": [
+      {
+        "name": "Abbas",
+        "number_of_resvs": 50
+      },
+      {
+        "name": "Khamis",
+        "number_of_resvs": 30
+      },
+      {
+        "name": "Ziad",
+        "number_of_resvs": 10
+      }
+    ],
+    "revenue_today": 1234.0,
+    "revenue_month": 12345.0,
+    "revenue_year": 123456.0,
+    "total_users": 5124,
+    "average_duration": 1.5,
+    "violations": 5,
+    "current_occupancy": 85,
+    "active_lots": 12
+  }
+}
