@@ -44,7 +44,7 @@ export default function ParkingGrid({ spots, onSpotClick }) {
             <div>Available Periods:</div>
             {spot.availableHours.map((period, idx) => (
               <div key={idx}>
-                {period.start} - {period.end}
+                {period[0]} - {period[1]}
               </div>
             ))}
           </div>

@@ -16,8 +16,8 @@ public class Driver implements DBConnection{
                     password VARCHAR(80) NOT NULL,
                     license_plate VARCHAR(20) UNIQUE NOT NULL,
                     card_type VARCHAR(50) NOT NULL,
-                    card_number INT UNIQUE NOT NULL,
-                    expiry_date DATE NOT NULL,
+                    card_number VARCHAR(50) NOT NULL,
+                    expiry_date VARCHAR(20) NOT NULL,
                     cvv INT NOT NULL,
                     FOREIGN KEY (driver_id) REFERENCES user(user_id)
                 )

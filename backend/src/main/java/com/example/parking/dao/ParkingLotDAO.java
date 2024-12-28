@@ -25,9 +25,9 @@ public class ParkingLotDAO implements DBConnection {
             preparedStatement.setString(1, lot.getName());
             preparedStatement.setString(2, point);
             preparedStatement.setInt(3, lot.getCapacity());
-            preparedStatement.setInt(3, lot.getRegular_cap());
-            preparedStatement.setInt(3, lot.getDisabled_cap());
-            preparedStatement.setInt(3, lot.getEv_charging_cap());
+            preparedStatement.setInt(4, lot.getRegular_cap());
+            preparedStatement.setInt(5, lot.getDisabled_cap());
+            preparedStatement.setInt(6, lot.getEv_charging_cap());
 
             int rowsAffected = preparedStatement.executeUpdate();
             System.out.println("Insert completed. Rows affected: " + rowsAffected);
@@ -96,15 +96,26 @@ public class ParkingLotDAO implements DBConnection {
     }
 
     public List<ParkingLotDTO> getAllLots() {
-        String selectSQL = "SELECT lot_id, name, ST_AsText(location) AS location, capacity FROM parking_lots";
-        ParkingLotDTO parkingLot = new ParkingLotDTO();
+        String selectSQL = """
+            SELECT 
+                lot_id, 
+                name, 
+                ST_AsText(location) AS location, 
+                capacity, 
+                regular_cap, 
+                disabled_cap, 
+                ev_charging_cap 
+            FROM parking_lots
+            """;
+
         List<ParkingLotDTO> list = new ArrayList<>();
+
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    parkingLot = new ParkingLotDTO();
+                    ParkingLotDTO parkingLot = new ParkingLotDTO();
                     parkingLot.setLot_id(resultSet.getInt("lot_id"));
                     parkingLot.setName(resultSet.getString("name"));
                     parkingLot.setCapacity(resultSet.getInt("capacity"));
@@ -118,6 +129,8 @@ public class ParkingLotDAO implements DBConnection {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return list;
     }
+
 }

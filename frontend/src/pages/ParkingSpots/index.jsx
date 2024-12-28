@@ -22,16 +22,19 @@ export default function ParkingSpots() {
   }
 
   useEffect(() => {
-    const lotId = searchParams.get("userId");
+    const lotId = searchParams.get("id");
+    console.log(lotId);
 
     async function fetchParkingSpots() {
       const response = await fetch(`http://localhost:8080/lots/${lotId}/spots`);
       const data = await response.json();
+      console.log(data);
 
       const spotsWithNumbers = data.map((spot, index) => ({
         ...spot,
         number: index + 1,
       }));
+      console.log(spotsWithNumbers);
 
       setSpots(spotsWithNumbers);
     }
@@ -48,20 +51,25 @@ export default function ParkingSpots() {
   const handleReservation = async (startTime, endTime) => {
     if (selectedSpot && startTime && endTime) {
       try {
-        const response = await fetch(
-          `http://localhost:8080/spots/${selectedSpot.spot_id}/reserve`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              driver_id: localStorage.getItem("userId"),
-              spot_id: selectedSpot.spot_id,
-              start_time: formatDate(startTime),
-              end_time: formatDate(endTime),
-            }),
-          }
+        const response = await fetch(`http://localhost:8080/spots/reserve`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            driver_id: parseInt(localStorage.getItem("userId")),
+            spot_id: selectedSpot.spot_id,
+            start_time: formatDate(startTime),
+            end_time: formatDate(endTime),
+          }),
+        });
+        console.log(
+          JSON.stringify({
+            driver_id: parseInt(localStorage.getItem("userId")),
+            spot_id: selectedSpot.spot_id,
+            start_time: formatDate(startTime),
+            end_time: formatDate(endTime),
+          })
         );
 
         if (!response.ok) {

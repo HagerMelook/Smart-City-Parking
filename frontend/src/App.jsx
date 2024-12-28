@@ -17,12 +17,14 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleLogin = () => {
+    console.log("Logged in successfully");
     setIsAuthenticated(true);
   };
 
   const handleLogout = () => {
     localStorage.removeItem("userType");
     localStorage.removeItem("userId");
+    console.log("Logged out successfully");
     setIsAuthenticated(false);
   };
 
@@ -44,7 +46,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Layout  onLogout={handleLogout}>
+      <Layout onLogout={handleLogout}>
         <Routes>
           <Route path="/dashboard" element={<ParkingDashboards />} />
           <Route path="/lot-dashboard" element={<LotManagerDashboard />} />
@@ -53,7 +55,7 @@ export default function App() {
           <Route path="/parking-lots" element={<MapWithSearch />} />
           <Route path="/parking-spots" element={<ParkingSpots />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/profile" replace />} />
         </Routes>
       </Layout>
     </BrowserRouter>

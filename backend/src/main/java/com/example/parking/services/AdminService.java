@@ -20,6 +20,8 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,15 +50,16 @@ public class AdminService {
             top.add(new TopUsersReport(driver.getFull_name(), user.getNumber_of_resvs(), driver.getLicense_plate()));
         }
 
-        String path = "backend\\src\\main\\resources\\topUsers.html";
+        Path path = Paths.get("src\\main\\resources\\topUsers.html");
+        Path absolutePath = path.toAbsolutePath();
         Map<String, Object> params = new HashMap<>();
         params.put("Report Owner", "System Admin");
         File file = ResourceUtils.getFile("classpath:topUsers.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(top);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);
-        JasperExportManager.exportReportToHtmlFile(jasperPrint, path);
-        return sendHttpResponse(path);
+        JasperExportManager.exportReportToHtmlFile(jasperPrint, absolutePath.toString());
+        return sendHttpResponse(absolutePath.toString());
     }
 
     public ResponseEntity<FileSystemResource> returnTopLots() throws JRException, FileNotFoundException {
@@ -67,15 +70,16 @@ public class AdminService {
             top.add(new TopLotsReport(parkingLot.getName(), lot.getRevenue(), parkingLot.getCapacity()));
         }
 
-        String path = "backend\\src\\main\\resources\\topLots.html";
+        Path path = Paths.get("src\\main\\resources\\topLots.html");
+        Path absolutePath = path.toAbsolutePath();
         Map<String, Object> params = new HashMap<>();
         params.put("Report Owner", "System Admin");
         File file = ResourceUtils.getFile("classpath:topLots.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(top);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);
-        JasperExportManager.exportReportToHtmlFile(jasperPrint, path);
-        return sendHttpResponse(path);
+        JasperExportManager.exportReportToHtmlFile(jasperPrint, absolutePath.toString());
+        return sendHttpResponse(absolutePath.toString());
     }
 
     ResponseEntity<FileSystemResource> sendHttpResponse(String path) {

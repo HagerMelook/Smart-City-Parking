@@ -1,22 +1,44 @@
 package com.example.parking;
 
-import com.example.parking.entities.*;
+import com.example.parking.dao.UserDAO;
+import com.example.parking.dto.UserDTO;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.example.parking.entities.Driver;
+import com.example.parking.entities.LotAdmin;
+import com.example.parking.entities.Notification;
+import com.example.parking.entities.ParkingLot;
+import com.example.parking.entities.ParkingSpot;
+import com.example.parking.entities.Reservations;
+import com.example.parking.entities.SysAdmin;
+import com.example.parking.entities.TopLots;
+import com.example.parking.entities.TopUsers;
+import com.example.parking.entities.Transactions;
+import com.example.parking.entities.User;
+
+
 @SpringBootApplication
 public class ParkingApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(ParkingApplication.class, args);
-		User u = new User();
-		u.createTable();
+		// Simulation simulation = new Simulation();
+		// simulation.SimConcurrentResv();
+		// simulation.SimConcurrentOccuiped(); 
+		// simulation.SimConcurrentOccuipedAndResv();
+		// simulation.SimSerialUpdates();
+		// simulation.SimResvThenCancelled();
+		
+        User user = new User();
+		user.createTable();
 		Driver driver = new Driver();
 		driver.createTable();
 		SysAdmin sysa = new SysAdmin();
 		sysa.createTable();
 		ParkingLot pl = new ParkingLot();
+		// pl.createProcedure();
 		pl.createTable();
+		pl.createTriggers();
 		ParkingSpot ps = new ParkingSpot();
 		ps.createTable();
 		ps.createTriggers();
@@ -33,6 +55,14 @@ public class ParkingApplication {
 		TopUsers tu = new TopUsers();
 		tu.createTable();
 		tu.createTriggers();
+		Notification no = new Notification();
+		no.createTable();
+		UserDAO userDAO = new UserDAO();
+		UserDTO admin = UserDTO.builder()
+				.userType("system-admin")
+				.email("parking@gmail.com")
+				.password("Parking123")
+				.build();
+		userDAO.insertUser(admin);
 	}
-
 }

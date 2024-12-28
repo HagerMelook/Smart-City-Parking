@@ -15,10 +15,12 @@ public class LoginService {
     public UserDTO checkAccount(UserDTO account){
         int userId = userDAO.getUserIdByEmail(account.getEmail());
         String userType = userDAO.getUserTypeById(userId);
+        String password = userDAO.getPasswordById(userId);
 
         UserDTO user = UserDTO.builder()
                 .userId(userId)
                 .userType(userType)
+                .password(password)
                 .build();
 
         return user;

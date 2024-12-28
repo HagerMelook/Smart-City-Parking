@@ -27,23 +27,20 @@ public class TopUsers implements DBConnection {
         }
     }
 
-    public void createTriggers(){
-        String setIsTopTrigger ="""
-            CREATE TRIGGER set_is_top_user
-            AFTER UPDATE ON top_users
-            FOR EACH ROW
-            BEGIN
-                IF NEW.number_of_resvs = 10 THEN
-                    UPDATE top_users
-                    SET is_top = TRUE
-                    WHERE driver_id = NEW.driver_id;
-                END IF;
-            END;
-            """;
-
+    public void createTriggers() {
+        String setIsTopTrigger = """
+                    CREATE TRIGGER set_is_top_user
+                    BEFORE UPDATE ON top_users
+                    FOR EACH ROW
+                    BEGIN
+                        IF NEW.number_of_resvs = 10 THEN
+                            SET NEW.is_top = TRUE;
+                        END IF;
+                    END;
+                    """;
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            Statement statement = connection.createStatement()) {
+                Statement statement = connection.createStatement()) {
             statement.executeUpdate(setIsTopTrigger);
             System.out.println("Trigger 'set_is_top' created successfully!");
 

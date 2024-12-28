@@ -1,16 +1,12 @@
 import { useState, useEffect } from "react";
-import { Box, Container, Typography, Grid, Button } from "@mui/material";
-import {
-  AttachMoney as MoneyIcon,
-  Warning as AlertIcon,
-  Report as ReportIcon,
-} from "@mui/icons-material";
+import { Button } from "@mui/material";
+
 import StatCard from "../Dashboard/components/StatCard";
-import { PercentIcon } from "lucide-react";
+import { DollarSign, Percent, AlertTriangle, FileText } from "lucide-react";
+const lotId = localStorage.getItem("userId");
 
 export function LotManagerDashboard() {
   const handleReportClick = () => {
-    const lotId = localStorage.getItem("userId");
     window.location.href = `http://localhost:8080/lots/${lotId}/report`;
   };
 
@@ -19,7 +15,7 @@ export function LotManagerDashboard() {
   useEffect(() => {
     async function fetchData() {
       const response = await fetch(
-        "http://localhost:8080/lots/{lot_id}/report"
+        `http://localhost:8080/lots/${lotId}/report`
       );
       const data = await response.json();
       setData(data);
@@ -28,92 +24,42 @@ export function LotManagerDashboard() {
   }, []);
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 3,
-        }}
-      >
-        <Typography variant="h4">Lot Manager Dashboard</Typography>
-        <Button
-          variant="contained"
-          startIcon={<ReportIcon />}
-          onClick={handleReportClick}
-          color="primary"
-        >
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Lot Manager Dashboard</h1>
+        <Button onClick={handleReportClick} className="flex items-center gap-2">
+          <FileText className="h-4 w-4" />
           View Report
         </Button>
-      </Box>
+      </div>
 
-      <Grid container spacing={3}>
+      <div className="space-y-8">
         {data.map((item) => (
-          <Grid item xs={12} lg={8} key={item.interval}>
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: {
-                  xs: "1fr",
-                  sm: "repeat(2, 1fr)",
-                  md: "repeat(4, 1fr)",
-                },
-                gap: 2,
-                mb: 3,
-              }}
-            >
-              <Typography variant="h4">{`${item.interval} Stats`}</Typography>
+          <div key={item.interval} className="space-y-4">
+            <h2 className="text-2xl font-semibold">{`${item.interval} Stats`}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <StatCard
                 title="Revenue"
                 value={`$${item.revenue.toFixed(1)}`}
-                icon={MoneyIcon}
+                icon={DollarSign}
                 trend={{ value: 12, isPositive: true }}
               />
               <StatCard
                 title="Violations"
                 value={item.violations}
-                icon={AlertIcon}
+                icon={AlertTriangle}
                 trend={{ value: 1, isPositive: false }}
               />
               <StatCard
-                title="Violations"
+                title="Occupancy Rate"
                 value={`${item.occupancyRate.toFixed(1)}%`}
-                icon={PercentIcon}
+                icon={Percent}
                 trend={{ value: 1, isPositive: false }}
               />
-            </Box>
-          </Grid>
+            </div>
+          </div>
         ))}
-        <Grid item xs={12} lg={8}>
-          {/* Stats Section */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: {
-                xs: "1fr",
-                sm: "repeat(2, 1fr)",
-                md: "repeat(4, 1fr)",
-              },
-              gap: 2,
-              mb: 3,
-            }}
-          >
-            <StatCard
-              title="Today's Revenue"
-              value="$520"
-              icon={MoneyIcon}
-              trend={{ value: 12, isPositive: true }}
-            />
-            <StatCard
-              title="Violations"
-              value="3"
-              icon={AlertIcon}
-              trend={{ value: 1, isPositive: false }}
-            />
-          </Box>
-        </Grid>
-      </Grid>
-    </Container>
+      </div>
+    </div>
   );
 }

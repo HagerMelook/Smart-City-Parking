@@ -17,7 +17,7 @@ public class TransactionDAO implements DBConnection {
         String insertSQL = "INSERT INTO transactions (amount, driver_id) VALUES (?, ?)";
         int generatedId = 0;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
+                PreparedStatement preparedStatement = connection.prepareStatement(insertSQL,PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setDouble(1, amount);
             preparedStatement.setInt(2, driver_id);
@@ -27,7 +27,7 @@ public class TransactionDAO implements DBConnection {
             if (rowsAffected > 0) {
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        generatedId = generatedKeys.getInt("transaction_id");
+                        generatedId = generatedKeys.getInt(1);
                         System.out.println("Inserted row ID: " + generatedId);
                     } else {
                         System.out.println("No ID was returned.");
