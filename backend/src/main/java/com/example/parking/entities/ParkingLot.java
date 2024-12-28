@@ -33,17 +33,30 @@ public class ParkingLot implements DBConnection {
     }
 
     public void createTriggers() {
-        String insertSpotsType = """
+String insertSpotsType = """
                 CREATE TRIGGER insert_spot
                 AFTER INSERT ON parking_lots
                 FOR EACH ROW
                 BEGIN
-                    CALL InsertIntoSpotTable(NEW.regular_cap, "regular", NEW.lot_id);
-                    CALL InsertIntoSpotTable(NEW.disabled_cap, "disabled", NEW.lot_id);
-                    CALL InsertIntoSpotTable(NEW.ev_charging_cap, "ev_charging", NEW.lot_id);
+                DECLARE counter INT DEFAULT 1;
+                WHILE counter <= NEW.regular_cap DO
+                    INSERT INTO parking_spots (lot_id, type) VALUES (NEW.lot_id, 'regular');
+                    SET counter = counter + 1;
+                END WHILE;
+
+                SET counter = 1;
+                WHILE counter <= NEW.disabled_cap DO
+                    INSERT INTO parking_spots (lot_id, type) VALUES (NEW.lot_id, 'disabled');
+                    SET counter = counter + 1;
+                END WHILE;
+
+                SET counter = 1;
+                WHILE counter <= NEW.ev_charging_cap DO
+                    INSERT INTO parking_spots (lot_id, type) VALUES (NEW.lot_id, 'ev_charging');
+                    SET counter = counter + 1;
+                END WHILE;
                 END;
                 """;
-
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 Statement statement = connection.createStatement()) {
             statement.executeUpdate(insertSpotsType);
