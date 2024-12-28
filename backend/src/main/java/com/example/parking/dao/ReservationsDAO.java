@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.example.parking.dto.ReservationDTO;
 import com.example.parking.entities.DBConnection;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReservationsDAO implements DBConnection {

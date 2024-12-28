@@ -105,25 +105,25 @@ public class Simulation {
 
         // Simulate 2 concurrent IoT device requests for the same parking spot
         IoTDeviceRequest iot = new IoTDeviceRequest(spotId, "reserved");
-        // executorService.submit(iot);
-        // try {
-        //     Thread.sleep(10000);
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
+        executorService.submit(iot);
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         ReservationsDAO reservationsDAO = new ReservationsDAO();
-        // System.out.println("The reservation Id is "+iot.resv_id);
-        // reservationsDAO.updateResvStatus(iot.resv_id, "confirmed");
+        System.out.println("The reservation Id is "+iot.resv_id);
+        reservationsDAO.updateResvStatus(iot.resv_id, "confirmed");
         ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAO();
         ParkingSpotDTO parkingSpot = parkingSpotDAO.getSpotsById(spotId);
         TransactionDAO transactionDAO = new TransactionDAO();
-        // transactionDAO.insertTransaction(parkingSpot.getPrice(),1);
-        // try {
-        //     Thread.sleep(10000);
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
+        transactionDAO.insertTransaction(parkingSpot.getPrice(),1);
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         executorService.submit(new IoTDeviceRequest(spotId, "available"));
         try {
             Thread.sleep(10000);
