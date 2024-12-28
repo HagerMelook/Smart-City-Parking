@@ -28,7 +28,7 @@ const MapWithSearch = () => {
 
   useEffect(() => {
     async function fetchParkingLots() {
-      const response = await fetch("https://localhost:8080/lots");
+      const response = await fetch("http://localhost:8080/lots");
 
       const data = await response.json();
       console.log(data);
@@ -177,7 +177,7 @@ const MapWithSearch = () => {
               position={[lot.latitude, lot.longitude]}
               icon={customIcon}
             >
-              <Link to={`/parking-spots?id=${lot.id}`}>
+              <Link to={`/parking-spots?id=${lot.lot_id}`}>
                 <Popup interactive={true}>
                   <h3>{lot.name}</h3>
                   <span>Capacity: {lot.capacity}</span>
