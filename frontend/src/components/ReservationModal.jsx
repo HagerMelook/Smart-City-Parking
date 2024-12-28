@@ -7,7 +7,6 @@ export default function ReservationModal({ spot, onClose, onReserve }) {
   const [endTime, setEndTime] = React.useState("");
   const [error, setError] = React.useState("");
 
-  // Function to handle time calculation
   const calculateEndTime = (startTime, hours) => {
     if (!startTime) return "";
     const startDate = new Date(startTime);
@@ -16,7 +15,6 @@ export default function ReservationModal({ spot, onClose, onReserve }) {
     setEndTime(startDate.getTime());
   };
 
-  // Function to validate if the start time is in the past
   const validateStartTime = (startTime) => {
     const currentTime = new Date();
 
@@ -28,7 +26,7 @@ export default function ReservationModal({ spot, onClose, onReserve }) {
       );
       return false;
     }
-    setError(""); // Reset error if the time is valid
+    setError("");
     return true;
   };
 
@@ -44,7 +42,6 @@ export default function ReservationModal({ spot, onClose, onReserve }) {
     setStartTime(selectedTime.getTime());
   };
 
-  // Update end time when duration or start time changes
   React.useEffect(() => {
     if (startTime && validateStartTime(startTime)) {
       calculateEndTime(startTime, hours);

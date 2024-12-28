@@ -28,8 +28,7 @@ const MapWithSearch = () => {
 
   useEffect(() => {
     async function fetchParkingLots() {
-      // const response = await fetch("https://localhost:8080/lots");
-      const response = await fetch("http://localhost:3001/parking_lots");
+      const response = await fetch("https://localhost:8080/lots");
 
       const data = await response.json();
       console.log(data);

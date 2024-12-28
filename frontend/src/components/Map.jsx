@@ -1,7 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import useGeolocation from "../hooks/useGeoLocation";
 
-import "./Map.css";
 import { useEffect, useState } from "react";
 
 const Map = () => {

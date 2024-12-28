@@ -1,12 +1,12 @@
 import ParkingGrid from "../../components/ParkingGrid";
 import ReservationModal from "../../components/ReservationModal";
 import { useState, useEffect } from "react";
-// import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 export default function ParkingSpots() {
   const [spots, setSpots] = useState([]);
   const [selectedSpot, setSelectedSpot] = useState(null);
-  // const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   function formatDate(milliseconds) {
     const date = new Date(milliseconds);
@@ -22,11 +22,10 @@ export default function ParkingSpots() {
   }
 
   useEffect(() => {
-    // const lotId = searchParams.get("id");
+    const lotId = searchParams.get("userId");
 
     async function fetchParkingSpots() {
-      // const response = await fetch(`http://localhost:8080/lots/${lotId}/spots`);
-      const response = await fetch(`http://localhost:3002/spots`);
+      const response = await fetch(`http://localhost:8080/lots/${lotId}/spots`);
       const data = await response.json();
 
       const spotsWithNumbers = data.map((spot, index) => ({
