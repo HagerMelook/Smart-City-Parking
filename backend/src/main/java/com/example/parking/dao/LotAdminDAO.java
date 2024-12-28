@@ -8,7 +8,9 @@ import java.sql.SQLException;
 
 import com.example.parking.dto.LotAdminDTO;
 import com.example.parking.entities.DBConnection;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class LotAdminDAO implements DBConnection {
     public int insertLotAdmin(LotAdminDTO lot_admin) {
         String insertSQL = "INSERT INTO lot_admin (lot_admin_id,full_name, email, password, lot_id) VALUES (?, ?, ?, ?, ?)";

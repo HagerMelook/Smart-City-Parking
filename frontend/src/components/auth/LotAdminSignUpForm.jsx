@@ -3,15 +3,15 @@ import LocationPicker from "../LocationPicker";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-export default function LotAdminSignUpForm({onLogin}) {
+export default function LotAdminSignUpForm({ onLogin }) {
   const [formData, setFormData] = React.useState({
     full_name: "",
     email: "",
     password: "",
     lotData: {
       name: "",
-      latitude:0,
-      longitude:0,
+      latitude: 0,
+      longitude: 0,
       capacity: 0,
       regular_cap: 0,
       disabled_cap: 0,
@@ -21,18 +21,18 @@ export default function LotAdminSignUpForm({onLogin}) {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Lot admin signup:", formData);
     try {
-      const response = await fetch("https://8080/signup/lot-admin", {
+      const response = await fetch("http://localhost:8080/signup/lot-admin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         const result = await response.json();
         console.log("manager signed up successfully:", result);
@@ -41,7 +41,6 @@ export default function LotAdminSignUpForm({onLogin}) {
         localStorage.setItem("userId", result.userId);
         onLogin();
         navigate("/dashboard");
-
       } else {
         const error = await response.json();
         console.error("Error during signup:", error);
@@ -49,7 +48,6 @@ export default function LotAdminSignUpForm({onLogin}) {
     } catch (error) {
       console.error("Network error:", error);
     }
-
   };
 
   return (
@@ -64,7 +62,9 @@ export default function LotAdminSignUpForm({onLogin}) {
           required
           className="input"
           value={formData.full_name}
-          onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, full_name: e.target.value })
+          }
         />
       </div>
 
@@ -123,14 +123,16 @@ export default function LotAdminSignUpForm({onLogin}) {
       <div>
         <label className="label">Lot Location</label>
         <LocationPicker
-
-          value={{ latitude: formData.lotData.latitude, longitude: formData.lotData.longitude }}
+          value={{
+            latitude: formData.lotData.latitude,
+            longitude: formData.lotData.longitude,
+          }}
           onChange={(location) =>
             setFormData((prev) => ({
               ...prev,
               lotData: {
                 ...prev.lotData,
-                latitude: location.latitude, 
+                latitude: location.latitude,
                 longitude: location.longitude,
               },
             }))

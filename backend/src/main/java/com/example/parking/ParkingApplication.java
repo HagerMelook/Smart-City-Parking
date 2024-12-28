@@ -1,23 +1,16 @@
 package com.example.parking;
 
+import com.example.parking.entities.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import com.example.parking.entities.Driver;
-import com.example.parking.entities.LotAdmin;
-import com.example.parking.entities.ParkingLot;
-import com.example.parking.entities.ParkingSpot;
-import com.example.parking.entities.Reservations;
-import com.example.parking.entities.SysAdmin;
-import com.example.parking.entities.TopLots;
-import com.example.parking.entities.TopUsers;
-import com.example.parking.entities.Transactions;
 
 @SpringBootApplication
 public class ParkingApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ParkingApplication.class, args);
+		User u = new User();
+		u.createTable();
 		Driver driver = new Driver();
 		driver.createTable();
 		SysAdmin sysa = new SysAdmin();
@@ -36,7 +29,7 @@ public class ParkingApplication {
 		tr.createTable();
 		TopLots tl = new TopLots();
 		tl.createTable();
-		tl.createTriggers();;
+		tl.createTriggers();
 		TopUsers tu = new TopUsers();
 		tu.createTable();
 		tu.createTriggers();

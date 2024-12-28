@@ -4,5 +4,5 @@ public interface DBConnection {
     
     static final String URL = "jdbc:mysql://localhost:3306/PARKING";
     static final String USER = "root";
-    static final String PASSWORD = "482003";
+    static final String PASSWORD = "secureseif1#";
 }

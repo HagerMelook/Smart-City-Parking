@@ -1,10 +1,6 @@
 package com.example.parking.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import com.example.parking.dto.UserDTO;
 import com.example.parking.entities.DBConnection;
@@ -16,7 +12,7 @@ public class UserDAO implements DBConnection{
         String insertSQL = "INSERT INTO user (type, email, password) VALUES (?, ?, ?)";
         int generatedId = 0;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
+                PreparedStatement preparedStatement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getUserType());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getPassword());
@@ -27,7 +23,7 @@ public class UserDAO implements DBConnection{
             if (rowsAffected > 0) {
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        generatedId = generatedKeys.getInt("user_id");
+                        generatedId = generatedKeys.getInt(1);
                         System.out.println("Inserted row ID: " + generatedId);
                     } else {
                         System.out.println("No ID was returned.");
@@ -46,7 +42,7 @@ public class UserDAO implements DBConnection{
     public int getUserIdByEmail(String email) {
         String querySQL = "SELECT user_id FROM user WHERE email = ?";
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(querySQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(querySQL, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, email);
 
@@ -65,7 +61,7 @@ public class UserDAO implements DBConnection{
     public String getUserTypeById(int userId) {
         String querySQL = "SELECT type FROM user WHERE user_id = ?";
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(querySQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(querySQL, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setInt(1, userId);
 
