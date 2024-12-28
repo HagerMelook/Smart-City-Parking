@@ -14,17 +14,28 @@ import NotificationsPage from "./pages/Notifications";
 import ReservationsPage from "./pages/Reservations";
 
 export default function App() {
-  // TODO: Add auth state management
-  const [isAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("userType");
+    localStorage.removeItem("userId");
+    setIsAuthenticated(false);
+  };
+
+
 
   if (!isAuthenticated) {
     return (
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/signup/driver" element={<DriverSignUpPage />} />
-          <Route path="/signup/lot-admin" element={<LotAdminSignUpPage />} />
+          <Route path="/signup/driver" element={<DriverSignUpPage onLogin = {handleLogin} />} />
+          <Route path="/signup/lot-admin" element={<LotAdminSignUpPage onLogin = {handleLogin} />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
@@ -33,7 +44,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Layout>
+      <Layout  onLogout={handleLogout}>
         <Routes>
           <Route path="/dashboard" element={<ParkingDashboards />} />
           <Route path="/lot-dashboard" element={<LotManagerDashboard />} />

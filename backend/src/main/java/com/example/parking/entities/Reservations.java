@@ -33,26 +33,26 @@ public class Reservations implements DBConnection {
     }
 
     public void createTriggers() {
-        String applyPenaltyTrigger = """
-                CREATE TRIGGER apply_penalty
-                BEFORE INSERT ON reservations
-                FOR EACH ROW
-                BEGIN
-                    SET NEW.end_time = DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 2 HOUR);
-                    SET NEW.penalty = (SELECT price * 2 FROM parking_spots WHERE spot_id = NEW.spot_id);
-                END;
-                """;
+        // String applyPenaltyTrigger = """
+        //         CREATE TRIGGER apply_penalty
+        //         BEFORE INSERT ON reservations
+        //         FOR EACH ROW
+        //         BEGIN
+        //             SET NEW.end_time = DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 2 HOUR);
+        //             SET NEW.penalty = (SELECT price * 2 FROM parking_spots WHERE spot_id = NEW.spot_id);
+        //         END;
+        //         """;
 
-        String updateSpotStatus = """
-                CREATE TRIGGER update_spot
-                AFTER INSERT ON reservations
-                FOR EACH ROW
-                BEGIN
-                    UPDATE parking_spots
-                    SET status = 'reserved'
-                    WHERE spot_id = NEW.spot_id;
-                END;
-                """;
+        // String updateSpotStatus = """
+        //         CREATE TRIGGER update_spot
+        //         AFTER INSERT ON reservations
+        //         FOR EACH ROW
+        //         BEGIN
+        //             UPDATE parking_spots
+        //             SET status = 'reserved'
+        //             WHERE spot_id = NEW.spot_id;
+        //         END;
+        //         """;
 
         String createEventQuery = """
                 CREATE EVENT update_expired_reservations
@@ -117,8 +117,8 @@ public class Reservations implements DBConnection {
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 Statement statement = connection.createStatement()) {
 
-            statement.executeUpdate(applyPenaltyTrigger);
-            statement.executeUpdate(updateSpotStatus);
+            //statement.executeUpdate(applyPenaltyTrigger);
+            //statement.executeUpdate(updateSpotStatus);
             statement.executeUpdate(createEventQuery);
             statement.executeUpdate(cancelledStatusTrigger);
             statement.executeUpdate(confirmedStatusTrigger);

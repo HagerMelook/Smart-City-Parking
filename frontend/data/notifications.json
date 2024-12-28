@@ -1,0 +1,39 @@
+{
+    "notifications": [
+        {
+            "id": 1,
+            "type": "violation",
+            "message": "Vehicle ABC123 exceeded the parking time limit in spot A1.",
+            "time": "10 minutes ago",
+            "read": false
+        },
+        {
+            "id": 2,
+            "type": "reservation",
+            "message": "A new reservation request has been made for spot B3.",
+            "time": "45 minutes ago",
+            "read": true
+        },
+        {
+            "id": 3,
+            "type": "system",
+            "message": "Scheduled system maintenance will occur tonight at 3 AM.",
+            "time": "2 hours ago",
+            "read": false
+        },
+        {
+            "id": 4,
+            "type": "violation",
+            "message": "Vehicle XYZ789 exceeded the parking time limit in spot C2.",
+            "time": "12 hours ago",
+            "read": true
+        },
+        {
+            "id": 5,
+            "type": "reservation",
+            "message": "New reservation request received for spot D1.",
+            "time": "1 day ago",
+            "read": false
+        }
+    ]
+}

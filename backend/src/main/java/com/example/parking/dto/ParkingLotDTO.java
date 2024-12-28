@@ -14,5 +14,7 @@ public class ParkingLotDTO {
     private double latitude;
     private double longitude;
     private int capacity;
-
+    private int regular_cap;
+    private int disabled_cap;
+    private int ev_charging_cap;
 }
