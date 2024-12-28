@@ -31,13 +31,11 @@ public class TopLots implements DBConnection{
     public void createTriggers(){
         String setIsTopTrigger ="""
             CREATE TRIGGER set_is_top_lot
-            AFTER UPDATE ON top_lots
+            BEFORE UPDATE ON top_lots
             FOR EACH ROW
             BEGIN
                 IF NEW.revenue >= 10000 THEN
-                    UPDATE top_lots
-                    SET is_top = TRUE
-                    WHERE lot_id = NEW.lot_id;
+                    SET NEW.is_top = TRUE;
                 END IF;
             END;
             """;

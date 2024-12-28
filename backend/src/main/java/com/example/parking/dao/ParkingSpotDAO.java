@@ -55,7 +55,7 @@ public class ParkingSpotDAO implements DBConnection {
                 ResultSet resultSet = selectStmt.executeQuery();
                 if (resultSet.next()) {
                     String currentStatus = resultSet.getString("status");
-                    if ("available".equals(currentStatus)) {
+                    if ("available".equals(currentStatus)|| ("occupied".equals(currentStatus)&& "available".equals(status))) {
                         try (PreparedStatement updateStmt = connection.prepareStatement(updateSQL)) {
                             updateStmt.setString(1, status);
                             updateStmt.setInt(2, spot_id);
