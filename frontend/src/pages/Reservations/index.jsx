@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import {
-  Box,
   Container,
   Typography,
   Paper,
@@ -13,14 +12,7 @@ import {
   TableRow,
   IconButton,
 } from "@mui/material";
-import {
-  DirectionsCar as CarIcon,
-  AttachMoney as MoneyIcon,
-  AccessTime as ClockIcon,
-  Check as CheckIcon,
-  Clear as ClearIcon,
-} from "@mui/icons-material";
-import StatCard from "../Dashboard/components/StatCard";
+import { Check as CheckIcon, Clear as ClearIcon } from "@mui/icons-material";
 
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
@@ -31,7 +23,9 @@ export default function ReservationsPage() {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const response = await fetch("http://localhost:8080/reservations"+id);
+        const response = await fetch(
+          "http://localhost:8080/reservations/" + id
+        );
 
         if (response.ok) {
           const data = await response.json();
@@ -49,6 +43,47 @@ export default function ReservationsPage() {
 
     fetchReservations();
   }, []);
+
+  const handleConfirm = async (resv_id) => {
+    const response = await fetch(
+      "http://localhost:8080/reservations/" + resv_id + "/confirm",
+      {
+        method: "PUT",
+      }
+    );
+
+    if (response.ok) {
+      const updatedReservations = reservations.map((reservation) => {
+        if (reservation.resv_id === resv_id) {
+          return { ...reservation, status: "active" };
+        }
+        return reservation;
+      });
+      setReservations(updatedReservations);
+    } else {
+      const errorData = await response.json();
+      setError(errorData.message || "Failed to confirm reservation");
+    }
+  };
+
+  const handleCancel = async (resv_id) => {
+    const response = await fetch(
+      "http://localhost:8080/reservations/" + resv_id + "/cancel",
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (response.ok) {
+      const updatedReservations = reservations.filter(
+        (reservation) => reservation.resv_id !== resv_id
+      );
+      setReservations(updatedReservations);
+    } else {
+      const errorData = await response.json();
+      setError(errorData.message || "Failed to cancel reservation.");
+    }
+  };
 
   if (loading) {
     return (
@@ -75,24 +110,6 @@ export default function ReservationsPage() {
       <Typography variant="h4" gutterBottom>
         Reservations
       </Typography>
-
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
-          gap: 2,
-          mb: 3,
-        }}
-      >
-        <StatCard title="Active Reservations" value="8" icon={CarIcon} />
-        <StatCard title="Upcoming Reservations" value="12" icon={ClockIcon} />
-        <StatCard
-          title="Today's Revenue"
-          value="$890"
-          icon={MoneyIcon}
-          trend={{ value: 15, isPositive: true }}
-        />
-      </Box>
 
       <Paper>
         <TableContainer>
@@ -128,10 +145,18 @@ export default function ReservationsPage() {
                     />
                   </TableCell>
                   <TableCell>
-                    <IconButton size="small" color="success">
+                    <IconButton
+                      size="small"
+                      color="success"
+                      onClick={() => handleConfirm(reservation.resv_id)}
+                    >
                       <CheckIcon />
                     </IconButton>
-                    <IconButton size="small" color="error">
+                    <IconButton
+                      size="small"
+                      color="error"
+                      onClick={() => handleCancel(reservation.resv_id)}
+                    >
                       <ClearIcon />
                     </IconButton>
                   </TableCell>
