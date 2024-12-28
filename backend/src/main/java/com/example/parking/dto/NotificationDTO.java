@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransactionDTO {
-    private int transaction_id;
-    private int driver_id;
-    private double amount;
-    private Timestamp timestamp;
-    private String payment_status;
+public class NotificationDTO {
+    private int notification_id;
+    private int user_id;
+    private String type;
+    private String msg;
+    private Timestamp time;
 }

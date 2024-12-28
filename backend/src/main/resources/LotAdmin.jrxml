@@ -1,0 +1,79 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="Lot Admin Report" language="java" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e9dbbf90-ab5d-4718-9bd6-100500c9adaa">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+<!--    <query language="SQL"><![CDATA[select * from orders;]]></query>-->
+    <field name="interval" class="java.lang.String">
+    </field>
+    <field name="occupancyRate" class="java.lang.Double">
+    </field>
+    <field name="revenue" class="java.lang.Double">
+    </field>
+    <field name="violations" class="java.lang.Integer">
+    </field>
+    <background/>
+    <title height="72">
+        <element kind="frame" uuid="d3e411b5-d43e-422c-8e33-7c1d7f171063" mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699">
+            <element kind="staticText" uuid="6de9c65c-8c61-41bf-b01f-be12ad39e159" x="20" y="20" width="234" height="43" forecolor="#FFFFFF" fontSize="34.0" bold="true">
+                <text><![CDATA[Lot Analysis ]]></text>
+            </element>
+            <element kind="staticText" uuid="82049767-c750-415c-a959-cfb62f925cbf" x="395" y="43" width="180" height="20" forecolor="#FFFFFF" fontSize="14.0" bold="false" hTextAlign="Right">
+                <text><![CDATA[Statistical Report]]></text>
+            </element>
+        </element>
+    </title>
+    <pageHeader height="13"/>
+    <columnHeader height="21">
+        <element kind="line" uuid="e42f1fd4-2b9f-4ef8-a1ce-6f24083bb5e5" x="-20" y="20" width="595" height="1" forecolor="#666666"/>
+        <element kind="staticText" uuid="548b745f-2352-4ae4-a5e2-b031d166baf6" mode="Opaque" x="0" y="0" width="138" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Center">
+            <text><![CDATA[Cuurent Interval]]></text>
+            <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="812958cc-bc20-40bc-ad1a-5f2064f9fbd5"/>
+        </element>
+        <element kind="staticText" uuid="36b66609-d1f3-4698-853d-ed2c47c00b5f" mode="Opaque" x="138" y="0" width="138" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Center">
+            <text><![CDATA[Occupancy Rate]]></text>
+            <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cdbbe377-a777-4124-8a59-1a0a9c910cd4"/>
+        </element>
+        <element kind="staticText" uuid="0537dd47-03ff-4ac2-b22e-4d0c6d81bca6" mode="Opaque" x="276" y="0" width="138" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Center">
+            <text><![CDATA[Revenue]]></text>
+            <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="50a57ced-e618-45d9-8d21-9ff8734922cc"/>
+        </element>
+        <element kind="staticText" uuid="5ebdfda4-e988-4ead-afac-626ae1e51026" mode="Opaque" x="414" y="0" width="138" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Center">
+            <text><![CDATA[Violations]]></text>
+            <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2485f970-6003-49d9-b958-a34f1be901fc"/>
+        </element>
+    </columnHeader>
+    <detail>
+        <band height="20">
+            <element kind="line" uuid="d7097a1b-6a90-4bad-9f81-9dc5108bdc59" positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1"/>
+            <element kind="textField" uuid="f241e0d2-8fa0-4338-aa3d-185accd45a05" x="0" y="0" width="138" height="20" fontSize="14.0" textAdjust="StretchHeight">
+                <expression><![CDATA[$F{interval}]]></expression>
+                <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="812958cc-bc20-40bc-ad1a-5f2064f9fbd5"/>
+            </element>
+            <element kind="textField" uuid="56eb392b-b417-4eff-a89e-6ca83a3125eb" x="138" y="0" width="138" height="20" fontSize="14.0" textAdjust="StretchHeight">
+                <expression><![CDATA[$F{occupancyRate}]]></expression>
+                <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cdbbe377-a777-4124-8a59-1a0a9c910cd4"/>
+            </element>
+            <element kind="textField" uuid="7e7151ed-4c59-4a2a-ae41-697e4d0dfec9" x="276" y="0" width="138" height="20" fontSize="14.0" textAdjust="StretchHeight">
+                <expression><![CDATA[$F{revenue}]]></expression>
+                <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="50a57ced-e618-45d9-8d21-9ff8734922cc"/>
+            </element>
+            <element kind="textField" uuid="25ec62f5-8f4b-499e-9f16-868040861e21" x="414" y="0" width="138" height="20" fontSize="14.0" textAdjust="StretchHeight">
+                <expression><![CDATA[$F{violations}]]></expression>
+                <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2485f970-6003-49d9-b958-a34f1be901fc"/>
+            </element>
+        </band>
+    </detail>
+    <columnFooter/>
+    <pageFooter height="17">
+        <element kind="textField" uuid="15117cc3-7bbc-4018-a17d-6d625843498e" mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" hTextAlign="Right">
+            <expression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></expression>
+        </element>
+        <element kind="textField" uuid="5394097c-afaf-48a9-a0c3-9318bdc07f88" mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" evaluationTime="Report">
+            <expression><![CDATA[" " + $V{PAGE_NUMBER}]]></expression>
+        </element>
+        <element kind="textField" uuid="787aafa5-8eae-4f61-a8fc-6192d973f989" x="0" y="4" width="100" height="13" pattern="EEEEE dd MMMMM yyyy">
+            <expression><![CDATA[new java.util.Date()]]></expression>
+        </element>
+    </pageFooter>
+    <summary/>
+</jasperReport>

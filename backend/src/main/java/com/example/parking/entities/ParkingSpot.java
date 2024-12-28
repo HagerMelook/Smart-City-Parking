@@ -15,7 +15,7 @@ public class ParkingSpot implements DBConnection {
                     lot_id INT NOT NULL,
                     status ENUM('available', 'occupied', 'reserved') DEFAULT 'available',
                     type ENUM('regular', 'disabled', 'ev_charging'),
-                    price DECIMAL(10, 2),
+                    price DECIMAL(10, 2) DEFAULT 0,
                     FOREIGN KEY (lot_id) REFERENCES parking_lots(lot_id)
                 )
                 """;

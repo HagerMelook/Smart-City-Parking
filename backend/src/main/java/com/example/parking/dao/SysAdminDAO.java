@@ -10,13 +10,15 @@ import com.example.parking.dto.SysAdminDTO;
 import com.example.parking.entities.DBConnection;
 
 public class SysAdminDAO implements DBConnection {
-    public int insertSYSAdmin(String name) {
-        String insertSQL = "INSERT INTO sys_admin (name) VALUES (?)";
+    public int insertSYSAdmin(SysAdminDTO sys_admin) {
+        String insertSQL = "INSERT INTO sys_admin (sys_admin_id, full_name, email, password) VALUES (?,?,?,?)";
         int generatedId = 0;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
-
-            preparedStatement.setString(1, name);
+            preparedStatement.setInt(1, sys_admin.getSys_admin_id());
+            preparedStatement.setString(2, sys_admin.getFull_name());
+            preparedStatement.setString(3, sys_admin.getEmail());
+            preparedStatement.setString(4, sys_admin.getPassword());
 
             int rowsAffected = preparedStatement.executeUpdate();
             System.out.println("Insert completed. Rows affected: " + rowsAffected);
@@ -41,7 +43,7 @@ public class SysAdminDAO implements DBConnection {
     }
 
     public String updateSYSAdminName(int sys_admin_Id, String name) {
-        String updateSQL = "UPDATE sys_admin SET name = ? WHERE sys_admin_id = ?";
+        String updateSQL = "UPDATE sys_admin SET full_name = ? WHERE sys_admin_id = ?";
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 PreparedStatement preparedStatement = connection.prepareStatement(updateSQL)) {
@@ -69,7 +71,9 @@ public class SysAdminDAO implements DBConnection {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     sysAdmin.setSys_admin_id(sys_admin_Id);
-                    sysAdmin.setName(resultSet.getString("name"));
+                    sysAdmin.setFull_name(resultSet.getString("full_name"));
+                    sysAdmin.setEmail(resultSet.getString("email"));
+                    sysAdmin.setPassword(resultSet.getString("password"));
                 } else {
                     System.out.println("No sys_admin found with ID: " + sys_admin_Id);
                 }
