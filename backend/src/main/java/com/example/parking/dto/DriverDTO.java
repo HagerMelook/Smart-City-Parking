@@ -16,7 +16,7 @@ public class DriverDTO {
     private String email;
     private String password;
     private String card_type;
-    private int card_num;
+    private String card_num;
     private int cvv;
-    private Date expiry_date;
+    private String expiry_date;
 }

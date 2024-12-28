@@ -21,13 +21,16 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<?> login (@RequestBody UserDTO user){
         try {
+            System.out.println(user.toString());
             UserDTO account = loginService.checkAccount(user);
-            if (account.getUserId() > 0) {
+            System.out.println();
+            if (account.getUserId() > 0 && user.getPassword().equals(account.getPassword())) {
                 return ResponseEntity.ok(user);
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("There is not such account");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("either email or password is incorrect");
             }
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
 

@@ -25,9 +25,9 @@ public class ParkingLotDAO implements DBConnection {
             preparedStatement.setString(1, lot.getName());
             preparedStatement.setString(2, point);
             preparedStatement.setInt(3, lot.getCapacity());
-            preparedStatement.setInt(3, lot.getRegular_cap());
-            preparedStatement.setInt(3, lot.getDisabled_cap());
-            preparedStatement.setInt(3, lot.getEv_charging_cap());
+            preparedStatement.setInt(4, lot.getRegular_cap());
+            preparedStatement.setInt(5, lot.getDisabled_cap());
+            preparedStatement.setInt(6, lot.getEv_charging_cap());
 
             int rowsAffected = preparedStatement.executeUpdate();
             System.out.println("Insert completed. Rows affected: " + rowsAffected);

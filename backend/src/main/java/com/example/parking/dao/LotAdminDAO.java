@@ -1,10 +1,6 @@
 package com.example.parking.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import com.example.parking.dto.LotAdminDTO;
 import com.example.parking.entities.DBConnection;
@@ -16,7 +12,7 @@ public class LotAdminDAO implements DBConnection {
         String insertSQL = "INSERT INTO lot_admin (lot_admin_id,full_name, email, password, lot_id) VALUES (?, ?, ?, ?, ?)";
         int generatedId = 0;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
+                PreparedStatement preparedStatement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setInt(1, lot_admin.getLot_admin_id());
             preparedStatement.setString(2, lot_admin.getFull_name());

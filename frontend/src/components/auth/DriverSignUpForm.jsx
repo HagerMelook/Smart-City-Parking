@@ -9,7 +9,7 @@ export default function DriverSignUpForm({onLogin}) {
     password: "",
     license_plate: "",
     card_type: "credit_card",
-    card_number: "",
+    card_num: "",
     expiry_date: "",
     cvv: "",
   });
@@ -21,7 +21,7 @@ export default function DriverSignUpForm({onLogin}) {
     console.log("Driver signup:", formData);
 
     try {
-      const response = await fetch("https://8080/signup/driver", {
+      const response = await fetch("http://localhost:8080/signup/driver", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export default function DriverSignUpForm({onLogin}) {
           type="text"
           required
           className="input"
-          value={formData.fullName}
+          value={formData.full_name}
           onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
         />
       </div>
@@ -139,9 +139,9 @@ export default function DriverSignUpForm({onLogin}) {
             type="text"
             required
             className="input"
-            value={formData.cardNumber}
+            value={formData.card_num}
             onChange={(e) =>
-              setFormData({...formData, card_number: e.target.value})
+              setFormData({...formData, card_num: e.target.value})
             }
           />
         </div>

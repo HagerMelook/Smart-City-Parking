@@ -1,10 +1,6 @@
 package com.example.parking.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +14,7 @@ public class DriverDAO implements DBConnection {
         String insertSQL = "INSERT INTO driver (driver_id,full_name, email, password, license_plate, card_type, card_number, expiry_date, cvv) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         int generatedId = 0;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
+                PreparedStatement preparedStatement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setInt(1, driver.getId());
             preparedStatement.setString(2, driver.getFull_name());
@@ -26,8 +22,8 @@ public class DriverDAO implements DBConnection {
             preparedStatement.setString(4, driver.getPassword());
             preparedStatement.setString(5, driver.getLicense_plate());
             preparedStatement.setString(6, driver.getCard_type());
-            preparedStatement.setInt(7, driver.getCard_num());
-            preparedStatement.setDate(8, driver.getExpiry_date());
+            preparedStatement.setString(7, driver.getCard_num());
+            preparedStatement.setString(8, driver.getExpiry_date());
             preparedStatement.setInt(9, driver.getCvv());
 
             int rowsAffected = preparedStatement.executeUpdate();
@@ -132,7 +128,7 @@ public class DriverDAO implements DBConnection {
         String selectSQL = "SELECT * FROM driver WHERE driver_id = ?";
         DriverDTO driver = new DriverDTO();
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS)){
 
             preparedStatement.setInt(1, driverId);
 
@@ -144,8 +140,8 @@ public class DriverDAO implements DBConnection {
                     driver.setPassword(resultSet.getString("password"));
                     driver.setLicense_plate(resultSet.getString("license_plate"));
                     driver.setCard_type(resultSet.getString("card_type"));
-                    driver.setCard_num(resultSet.getInt("card_number"));
-                    driver.setExpiry_date(resultSet.getDate("expiry_date"));
+                    driver.setCard_num(resultSet.getString("card_number"));
+                    driver.setExpiry_date(resultSet.getString("expiry_date"));
                     driver.setCvv(resultSet.getInt("cvv"));
                 } else {
                     System.out.println("No driver found with ID: " + driverId);

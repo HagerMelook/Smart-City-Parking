@@ -12,8 +12,9 @@ import {
 import { Notifications } from "@mui/icons-material";
 import proptype from "prop-types";
 
-export default function Layout({ children }) {
+export default function Layout({ children , onLogout}) {
   const location = useLocation();
+  const type = localStorage.getItem("userType");
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -27,12 +28,15 @@ export default function Layout({ children }) {
         </div>
 
         <nav className="mt-8">
-          <NavItem
-            to="/dashboard"
-            icon={<LayoutDashboard />}
-            text="Dashboard"
-            active={location.pathname === "/dashboard"}
-          />
+        {type === "system-admin" && (
+            <NavItem
+              to="/dashboard"
+              icon={<LayoutDashboard />}
+              text="Dashboard"
+              active={location.pathname === "/dashboard"}
+            />
+          )}
+
           <NavItem
             to="/parking-lots"
             icon={<ParkingCircle />}
@@ -63,12 +67,14 @@ export default function Layout({ children }) {
             text="Reservations"
             active={location.pathname === "/reservations"}
           />
-          <NavItem
-            to="/lot-dashboard"
-            icon={<LayoutDashboard />}
-            text="Lot Dashboard"
-            active={location.pathname === "/lot-dashboard"}
-          />
+          {type === "lot-admin" && (
+            <NavItem
+              to="/lot-dashboard"
+              icon={<LayoutDashboard />}
+              text="Lot Dashboard"
+              active={location.pathname === "/lot-dashboard"}
+            />
+          )}
           <NavItem
             to="/settings"
             icon={<Settings />}
@@ -77,7 +83,7 @@ export default function Layout({ children }) {
           />
 
           <div className="absolute bottom-4 w-64">
-            <NavItem to="*" icon={<LogOut />} text="Logout" active={false} />
+            <NavItem to="*" onLogout={onLogout} icon={<LogOut />} text="Logout" active={false} />
           </div>
         </nav>
       </aside>
@@ -90,9 +96,10 @@ export default function Layout({ children }) {
 
 Layout.propTypes = {
   children: proptype.node.isRequired,
+  onLogout: proptype.func.isRequired,
 };
 
-function NavItem({ to, icon, text, active = false }) {
+function NavItem({onLogout, to, icon, text, active = false }) {
   return (
     <Link
       to={to}
@@ -101,7 +108,7 @@ function NavItem({ to, icon, text, active = false }) {
       }`}
     >
       {icon}
-      <span className="font-medium">{text}</span>
+      <span onClick = {onLogout} className="font-medium">{text}</span>
     </Link>
   );
 }
@@ -111,4 +118,5 @@ NavItem.propTypes = {
   icon: proptype.node.isRequired,
   text: proptype.string.isRequired,
   active: proptype.bool,
+  onLogout: proptype.func.isRequired,
 };

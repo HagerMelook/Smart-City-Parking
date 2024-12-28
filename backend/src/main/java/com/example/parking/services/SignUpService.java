@@ -51,10 +51,11 @@ public class SignUpService {
                 .build();
 
         ParkingLotDTO parkingLot = lotAdmin.getLotData();
-        parkingLotDAO.insertParkingLot(parkingLot);
+        int lot_id = parkingLotDAO.insertParkingLot(parkingLot);
 
         int lotAdminId = userDAO.insertUser(account);
         lotAdmin.setLot_admin_id(lotAdminId);
+        lotAdmin.setLot_id(lot_id);
         lotAdminDAO.insertLotAdmin(lotAdmin);
 
         UserDTO user = UserDTO.builder()
