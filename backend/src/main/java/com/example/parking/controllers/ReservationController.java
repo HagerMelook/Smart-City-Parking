@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/notifications")
+@RequestMapping("/reservation")
 public class ReservationController {
     ReservationsDAO reservationsDAO;
 
