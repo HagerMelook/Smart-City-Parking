@@ -15,6 +15,34 @@ import proptype from "prop-types";
 export default function Layout({ children , onLogout}) {
   const location = useLocation();
   const type = localStorage.getItem("userType");
+  const renderDriverNavItems = () => (
+    <>
+      <NavItem
+        to="/parking-lots"
+        icon={<ParkingCircle />}
+        text="Parking Lots"
+        active={location.pathname === "/parking-lots"}
+      />
+      <NavItem
+        to="/parking-spots"
+        icon={<Car />}
+        text="Parking Spots"
+        active={location.pathname === "/parking-spots"}
+      />
+      <NavItem
+        to="/profile"
+        icon={<User />}
+        text="Profile"
+        active={location.pathname === "/profile"}
+      />
+      <NavItem
+        to="/reservations"
+        icon={<Text />}
+        text="Reservations"
+        active={location.pathname === "/reservations"}
+      />
+    </>
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -36,37 +64,8 @@ export default function Layout({ children , onLogout}) {
               active={location.pathname === "/dashboard"}
             />
           )}
+        {type === "driver" && renderDriverNavItems()}
 
-          <NavItem
-            to="/parking-lots"
-            icon={<ParkingCircle />}
-            text="Parking Lots"
-            active={location.pathname === "/parking-lots"}
-          />
-          <NavItem
-            to="/parking-spots"
-            icon={<Car />}
-            text="Parking Spots"
-            active={location.pathname === "/parking-spots"}
-          />
-          <NavItem
-            to="/profile"
-            icon={<User />}
-            text="Profile"
-            active={location.pathname === "/profile"}
-          />
-          <NavItem
-            to="/notifications"
-            icon={<Notifications />}
-            text="Notifications"
-            active={location.pathname === "/notifications"}
-          />
-          <NavItem
-            to="/reservations"
-            icon={<Text />}
-            text="Reservations"
-            active={location.pathname === "/reservations"}
-          />
           {type === "lot-admin" && (
             <NavItem
               to="/lot-dashboard"
@@ -75,6 +74,14 @@ export default function Layout({ children , onLogout}) {
               active={location.pathname === "/lot-dashboard"}
             />
           )}
+
+          <NavItem
+            to="/notifications"
+            icon={<Notifications />}
+            text="Notifications"
+            active={location.pathname === "/notifications"}
+          />
+
           <NavItem
             to="/settings"
             icon={<Settings />}
