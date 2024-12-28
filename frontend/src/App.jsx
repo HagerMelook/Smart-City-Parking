@@ -55,7 +55,7 @@ export default function App() {
           <Route path="/parking-lots" element={<MapWithSearch />} />
           <Route path="/parking-spots" element={<ParkingSpots />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/profile" replace />} />
         </Routes>
       </Layout>
     </BrowserRouter>

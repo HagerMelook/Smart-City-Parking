@@ -23,9 +23,10 @@ public class LoginController {
         try {
             System.out.println(user.toString());
             UserDTO account = loginService.checkAccount(user);
-            System.out.println();
+            System.out.println(account.toString());
             if (account.getUserId() > 0 && user.getPassword().equals(account.getPassword())) {
-                return ResponseEntity.ok(user);
+                account.setPassword(null);
+                return ResponseEntity.ok(account);
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("either email or password is incorrect");
             }

@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 
 export default function LoginForm({ onLogin }) {
   const [formData, setFormData] = React.useState({
-    userId:0,
-    userType:"",
     email: "",
     password: "",
   });
