@@ -93,7 +93,7 @@ public class ReservationsDAO implements DBConnection {
     }
 
     public List<ReservationDTO> getResvsByDriverId(int driver_id) {
-        String selectSQL = "SELECT * FROM reservations WHERE driver_id= ?";
+        String selectSQL = "SELECT * FROM reservations WHERE driver_id = ? AND status <> 'cancelled'";
         ReservationDTO reservation = new ReservationDTO();
         List<ReservationDTO> list = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
