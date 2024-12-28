@@ -1,16 +1,14 @@
 package com.example.parking.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.parking.dto.TopLotsDTO;
 import com.example.parking.entities.DBConnection;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class TopLotsDAO implements DBConnection {
     public String insertTopLot(int lot_id, double revenue, boolean is_top) {
         String insertSQL = "INSERT INTO top_lots (lot_id, revenue, is_top) VALUES (?, ?, ?)";
@@ -91,16 +89,18 @@ public class TopLotsDAO implements DBConnection {
     }
 
     public List<TopLotsDTO> getTopLots() {
-        String selectSQL = "SELECT * FROM top_lots WHERE is_top = TRUE";
+        String selectSQL = "SELECT * FROM top_lots WHERE is_top = TRUE ORDER BY revenue DESC" ;
         List<TopLotsDTO> list = new ArrayList<>();
         TopLotsDTO topLots = new TopLotsDTO();
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+                PreparedStatement preparedStatement = connection.prepareStatement(selectSQL, Statement.RETURN_GENERATED_KEYS)) {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
+                    topLots = new TopLotsDTO();
                     topLots.setLot_id(resultSet.getInt("lot_id"));
                     topLots.setRevenue(resultSet.getInt("revenue"));
+                    list.add(topLots);
                 }
             }
         } catch (SQLException e) {

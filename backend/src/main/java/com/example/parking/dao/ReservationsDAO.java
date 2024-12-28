@@ -7,11 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.example.parking.dto.ReservationDTO;
 import com.example.parking.entities.DBConnection;
-import com.example.parking.entities.Reservations;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -201,9 +201,9 @@ public class ReservationsDAO implements DBConnection {
         return reservation;
     }
 
-    public String numberOfReservationsAndRevenueForSpotLastInterval(int spotId, int index) {
+    public int numberOfReservations(int spotId, int index) {
 //        Index is an indicator with 1 for day, 2 for month, 3 for year
-        String selectSQL = "SELECT COUNT(*) as reserved, SUM(penalty) as penalties FROM reservations " +
+        String selectSQL = "SELECT COUNT(*) as reserved FROM reservations " +
                 "WHERE spot_id= ? AND status <> 'cancelled' AND YEAR(start_time) = YEAR(CURDATE()) ";
         switch (index){
             case 1:
@@ -217,7 +217,6 @@ public class ReservationsDAO implements DBConnection {
         }
 
         int count = 0;
-        long penalties=0;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
             preparedStatement.setInt(1, spotId);
@@ -225,13 +224,48 @@ public class ReservationsDAO implements DBConnection {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     count = resultSet.getInt("reserved");
-                    penalties = resultSet.getInt("penalties");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return (count+" "+penalties);
+        return count;
+    }
+
+    public HashMap<String, Double> getNumberAndAmountOfViolations(int spotId, int index) {
+//        Index is an indicator with 1 for day, 2 for month, 3 for year
+        String selectSQL = "SELECT COUNT(*) as violations, SUM(penalty) as penalties FROM reservations " +
+                "WHERE spot_id = ? AND penalty > 0 AND YEAR(start_time) = YEAR(CURDATE()) ";
+        switch (index){
+            case 1:
+                selectSQL += "AND DAY(start_time) = DAY(CURDATE()) AND MONTH(start_time) = MONTH(CURDATE())";
+                break;
+            case 2:
+                selectSQL += "AND MONTH(start_time) = MONTH(CURDATE()) ";
+                break;
+            default:
+                break;
+        }
+
+        int violations = 0;
+        double penalties = 0;
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+            preparedStatement.setInt(1, spotId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    violations = resultSet.getInt("violations");
+                    penalties = resultSet.getDouble("penalties");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        HashMap<String, Double> map = new HashMap<>();
+        map.put("violations", (double)violations);
+        map.put("penalties", penalties);
+        return map;
     }
 
 }

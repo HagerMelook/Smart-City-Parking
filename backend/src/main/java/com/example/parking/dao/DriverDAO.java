@@ -8,7 +8,9 @@ import java.sql.SQLException;
 
 import com.example.parking.dto.DriverDTO;
 import com.example.parking.entities.DBConnection;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class DriverDAO implements DBConnection {
     public int insertDriver(String name, String licensePlate, String paymentMethod) {
         String insertSQL = "INSERT INTO driver (name, license_plate, payment_method) VALUES (?, ?, ?)";
