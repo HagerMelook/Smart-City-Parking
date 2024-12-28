@@ -26,16 +26,12 @@ export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const id = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const response = await fetch("https://localhost:8080/reservations", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch("http://localhost:8080/reservations"+id);
 
         if (response.ok) {
           const data = await response.json();
@@ -105,8 +101,6 @@ export default function ReservationsPage() {
               <TableRow>
                 <TableCell>Reservation ID</TableCell>
                 <TableCell>Spot</TableCell>
-                <TableCell>Customer</TableCell>
-                <TableCell>Vehicle No.</TableCell>
                 <TableCell>Start Time</TableCell>
                 <TableCell>End Time</TableCell>
                 <TableCell>Status</TableCell>
@@ -115,13 +109,11 @@ export default function ReservationsPage() {
             </TableHead>
             <TableBody>
               {reservations.map((reservation) => (
-                <TableRow key={reservation.id}>
-                  <TableCell>#{reservation.id}</TableCell>
-                  <TableCell>{reservation.spotId}</TableCell>
-                  <TableCell>{reservation.customerName}</TableCell>
-                  <TableCell>{reservation.vehicleNo}</TableCell>
-                  <TableCell>{reservation.startTime}</TableCell>
-                  <TableCell>{reservation.endTime}</TableCell>
+                <TableRow key={reservation.resv_id}>
+                  <TableCell>#{reservation.resv_id}</TableCell>
+                  <TableCell>{reservation.spot_id}</TableCell>
+                  <TableCell>{reservation.start_time}</TableCell>
+                  <TableCell>{reservation.end_time}</TableCell>
                   <TableCell>
                     <Chip
                       label={reservation.status}
