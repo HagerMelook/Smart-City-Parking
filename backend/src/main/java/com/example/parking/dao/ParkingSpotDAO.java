@@ -44,23 +44,46 @@ public class ParkingSpotDAO implements DBConnection {
     //     return generatedId;
     // }
 
-    public String updateSpotStatue(int spot_id, String status) {
+    public String updateSpotStatus(int spot_id, String status) {
+        String selectForUpdateSQL = "SELECT status FROM parking_spots WHERE spot_id = ? FOR UPDATE";
         String updateSQL = "UPDATE parking_spots SET status = ? WHERE spot_id = ?";
-
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                PreparedStatement preparedStatement = connection.prepareStatement(updateSQL)) {
-
-            preparedStatement.setString(1, status);
-            preparedStatement.setInt(2, spot_id);
-
-            int rowsAffected = preparedStatement.executeUpdate();
-            System.out.println("Update completed. Rows affected: " + rowsAffected);
-
+        String msg;
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement selectStmt = connection.prepareStatement(selectForUpdateSQL)) {
+                selectStmt.setInt(1, spot_id);
+                ResultSet resultSet = selectStmt.executeQuery();
+                if (resultSet.next()) {
+                    String currentStatus = resultSet.getString("status");
+                    if ("available".equals(currentStatus)) {
+                        try (PreparedStatement updateStmt = connection.prepareStatement(updateSQL)) {
+                            updateStmt.setString(1, status);
+                            updateStmt.setInt(2, spot_id);
+                            int rowsAffected = updateStmt.executeUpdate();
+                            if (rowsAffected > 0) {
+                                connection.commit();
+                                msg = "Update completed successfully. Rows affected: " + rowsAffected;
+                            } else {
+                                connection.rollback();
+                                msg = "Update failed. No rows were affected.";
+                            }
+                        }
+                    } else {
+                        connection.rollback();
+                        msg = "Update denied. Current status is not Available.";
+                    }
+                } else {
+                    connection.rollback();
+                    msg = "Spot not found. Update failed.";
+                }
+            }
         } catch (SQLException e) {
+            msg = "An error occurred: " + e.getMessage();
             e.printStackTrace();
         }
-        return "Updated Completed Successfully";
+        return msg;
     }
+    
 
     public String updateSpotType(int spotId, String type) {
         String updateSQL = "UPDATE parking_spots SET type = ? WHERE spot_id = ?";
