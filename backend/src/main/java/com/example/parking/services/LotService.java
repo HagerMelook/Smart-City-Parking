@@ -8,14 +8,22 @@ import com.example.parking.dto.ParkingSpotDTO;
 import com.example.parking.dto.ReservationDTO;
 import com.example.parking.entities.Report;
 import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LotService {
@@ -143,22 +151,24 @@ public class LotService {
         return reports;
     }
 
-//    ResponseEntity<FileSystemResource> generateReport(List<Report> reports) throws FileNotFoundException, JRException {
-//        String path = "D:\\Current\\Database\\Project\\Smart-City-Parking\\backend\\src\\main\\resources\\lot_report.html";
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("Report Owner", "Lot Admin");
-//        File file = ResourceUtils.getFile("classpath:LotAdmin.jrxml");
-//        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-//        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(reports);
-//        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);
-//        JasperExportManager.exportReportToHtmlFile(jasperPrint, path);
-//
-//        File sentFile = new File(path);
-//        FileSystemResource fileResource = new FileSystemResource(sentFile);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add(HttpHeaders.CONTENT_TYPE, "text/html");
-//        return ResponseEntity.ok()
-//                .headers(headers)
-//                .body(fileResource);
-//    }
+    public ResponseEntity<FileSystemResource> generateReport(List<Report> reports) throws FileNotFoundException, JRException {
+
+        Path path = Paths.get("src\\main\\resources\\LotAdmin.html");
+        Path absolutePath = path.toAbsolutePath();
+        Map<String, Object> params = new HashMap<>();
+        params.put("Report Owner", "System Admin");
+        File file = ResourceUtils.getFile("classpath:LotAdmin.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(reports);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);
+        JasperExportManager.exportReportToHtmlFile(jasperPrint, absolutePath.toString());
+
+        File sentFile = new File(absolutePath.toString());
+        FileSystemResource fileResource = new FileSystemResource(sentFile);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, "text/html");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(fileResource);
+    }
 }

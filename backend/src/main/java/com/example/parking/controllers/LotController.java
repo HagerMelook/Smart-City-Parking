@@ -5,6 +5,7 @@ import com.example.parking.dto.ParkingSpotDTO;
 import com.example.parking.entities.Report;
 import com.example.parking.services.LotService;
 import net.sf.jasperreports.engine.JRException;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,5 +41,10 @@ public class LotController {
     @GetMapping("/{lotId}/report")
     public List<Report> lotStatistics(@PathVariable("lotId") int lotId) throws JRException, FileNotFoundException {
         return lotService.collectStatistics(lotId);
+    }
+
+    @GetMapping("/{lotId}/report/html")
+    public ResponseEntity<FileSystemResource> lotStatisticsReport(@PathVariable("lotId") int lotId) throws JRException, FileNotFoundException {
+        return lotService.generateReport(lotService.collectStatistics(lotId));
     }
 }
