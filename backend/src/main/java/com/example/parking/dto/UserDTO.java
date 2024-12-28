@@ -1,17 +1,17 @@
 package com.example.parking.dto;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LotAdminDTO {
-    private int lot_admin_id;
-    private int lot_id;
-    private String full_name;
-    private ParkingLotDTO lotData;
+@Builder
+public class UserDTO {
+    private int userId;
+    private String userType;
     private String email;
     private String password;
 }

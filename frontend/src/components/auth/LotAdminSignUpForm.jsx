@@ -5,16 +5,17 @@ import PropTypes from "prop-types";
 
 export default function LotAdminSignUpForm({onLogin}) {
   const [formData, setFormData] = React.useState({
-    name: "",
+    full_name: "",
     email: "",
     password: "",
-    lotLocation: "",
-    lotName: "",
-    capacity: 0,
-    spotTypes: {
-      regular: 0,
-      disabled: 0,
-      evCharging: 0,
+    lotData: {
+      name: "",
+      latitude:0,
+      longitude:0,
+      capacity: 0,
+      regular_cap: 0,
+      disabled_cap: 0,
+      ev_charging_cap: 0,
     },
   });
 
@@ -23,7 +24,6 @@ export default function LotAdminSignUpForm({onLogin}) {
   const handleSubmit = async(e) => {
     e.preventDefault();
     console.log("Lot admin signup:", formData);
-    console.log(formData.lotLocation)
     try {
       const response = await fetch("https://8080/signup/lot-admin", {
         method: "POST",
@@ -63,8 +63,8 @@ export default function LotAdminSignUpForm({onLogin}) {
           type="text"
           required
           className="input"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          value={formData.full_name}
+          onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
         />
       </div>
 
@@ -107,9 +107,15 @@ export default function LotAdminSignUpForm({onLogin}) {
           type="text"
           required
           className="input"
-          value={formData.lotName}
+          value={formData.lotData.name}
           onChange={(e) =>
-            setFormData({ ...formData, lotName: e.target.value })
+            setFormData({
+              ...formData,
+              lotData: {
+                ...formData.lotData,
+                name: e.target.value,
+              },
+            })
           }
         />
       </div>
@@ -117,12 +123,14 @@ export default function LotAdminSignUpForm({onLogin}) {
       <div>
         <label className="label">Lot Location</label>
         <LocationPicker
-          value={formData.lotLocation}
+
+          value={{ latitude: formData.lotData.latitude, longitude: formData.lotData.longitude }}
           onChange={(location) =>
             setFormData((prev) => ({
               ...prev,
-              lotLocation: {
-                latitude: location.latitude,
+              lotData: {
+                ...prev.lotData,
+                latitude: location.latitude, 
                 longitude: location.longitude,
               },
             }))
@@ -140,9 +148,15 @@ export default function LotAdminSignUpForm({onLogin}) {
           required
           min="0"
           className="input"
-          value={formData.capacity}
+          value={formData.lotData.capacity}
           onChange={(e) =>
-            setFormData({ ...formData, capacity: parseInt(e.target.value) })
+            setFormData({
+              ...formData,
+              lotData: {
+                ...formData.lotData,
+                capacity: parseInt(e.target.value),
+              },
+            })
           }
         />
       </div>
@@ -161,13 +175,13 @@ export default function LotAdminSignUpForm({onLogin}) {
               required
               min="0"
               className="input"
-              value={formData.spotTypes.regular}
+              value={formData.lotData.regular_cap}
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  spotTypes: {
-                    ...formData.spotTypes,
-                    regular: parseInt(e.target.value),
+                  lotData: {
+                    ...formData.lotData,
+                    regular_cap: parseInt(e.target.value),
                   },
                 })
               }
@@ -184,13 +198,13 @@ export default function LotAdminSignUpForm({onLogin}) {
               required
               min="0"
               className="input"
-              value={formData.spotTypes.disabled}
+              value={formData.lotData.disabled_cap}
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  spotTypes: {
-                    ...formData.spotTypes,
-                    disabled: parseInt(e.target.value),
+                  lotData: {
+                    ...formData.lotData,
+                    disabled_cap: parseInt(e.target.value),
                   },
                 })
               }
@@ -207,13 +221,13 @@ export default function LotAdminSignUpForm({onLogin}) {
               required
               min="0"
               className="input"
-              value={formData.spotTypes.evCharging}
+              value={formData.lotData.ev_charging_cap}
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  spotTypes: {
-                    ...formData.spotTypes,
-                    evCharging: parseInt(e.target.value),
+                  lotData: {
+                    ...formData.lotData,
+                    ev_charging_cap: parseInt(e.target.value),
                   },
                 })
               }

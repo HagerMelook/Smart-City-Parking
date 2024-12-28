@@ -4,16 +4,14 @@ import PropTypes from "prop-types";
 
 export default function DriverSignUpForm({onLogin}) {
   const [formData, setFormData] = React.useState({
-    name: "",
+    full_name: "",
     email: "",
     password: "",
-    licensePlate: "",
-    paymentMethod: {
-      type: "credit_card",
-      cardNumber: "",
-      expiryDate: "",
-      cvv: "",
-    },
+    license_plate: "",
+    card_type: "credit_card",
+    card_number: "",
+    expiry_date: "",
+    cvv: "",
   });
 
   const navigate = useNavigate();
@@ -61,8 +59,8 @@ export default function DriverSignUpForm({onLogin}) {
           type="text"
           required
           className="input"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          value={formData.fullName}
+          onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
         />
       </div>
 
@@ -107,7 +105,7 @@ export default function DriverSignUpForm({onLogin}) {
           className="input"
           value={formData.licensePlate}
           onChange={(e) =>
-            setFormData({ ...formData, licensePlate: e.target.value })
+            setFormData({ ...formData, license_plate: e.target.value })
           }
         />
       </div>
@@ -122,15 +120,9 @@ export default function DriverSignUpForm({onLogin}) {
           <select
             id="cardType"
             className="input"
-            value={formData.paymentMethod.type}
+            value={formData.cardType}
             onChange={(e) =>
-              setFormData({
-                ...formData,
-                paymentMethod: {
-                  ...formData.paymentMethod,
-                  type: e.target.value,
-                },
-              })
+              setFormData({...formData, card_type: e.target.value})
             }
           >
             <option value="credit_card">Credit Card</option>
@@ -147,15 +139,9 @@ export default function DriverSignUpForm({onLogin}) {
             type="text"
             required
             className="input"
-            value={formData.paymentMethod.cardNumber}
+            value={formData.cardNumber}
             onChange={(e) =>
-              setFormData({
-                ...formData,
-                paymentMethod: {
-                  ...formData.paymentMethod,
-                  cardNumber: e.target.value,
-                },
-              })
+              setFormData({...formData, card_number: e.target.value})
             }
           />
         </div>
@@ -171,15 +157,9 @@ export default function DriverSignUpForm({onLogin}) {
               required
               placeholder="MM/YY"
               className="input"
-              value={formData.paymentMethod.expiryDate}
+              value={formData.expiryDate}
               onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  paymentMethod: {
-                    ...formData.paymentMethod,
-                    expiryDate: e.target.value,
-                  },
-                })
+                setFormData({...formData, expiry_date: e.target.value})
               }
             />
           </div>
@@ -192,15 +172,9 @@ export default function DriverSignUpForm({onLogin}) {
               type="text"
               required
               className="input"
-              value={formData.paymentMethod.cvv}
+              value={formData.cvv}
               onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  paymentMethod: {
-                    ...formData.paymentMethod,
-                    cvv: e.target.value,
-                  },
-                })
+                setFormData({...formData, cvv: e.target.value})
               }
             />
           </div>

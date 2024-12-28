@@ -10,7 +10,9 @@ public class User implements DBConnection {
         String createTableSQL = """
                 CREATE TABLE user (
                     user_id INT AUTO_INCREMENT PRIMARY KEY,
-                    type VARCHAR(80) NOT NULL
+                    type VARCHAR(80) NOT NULL,
+                    email VARCHAR(100) NOT NULL,
+                    password VARCHAR(30) NOT NULL
                 )
                 """;
 
