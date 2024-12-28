@@ -73,7 +73,7 @@ export default function ParkingSpots() {
           `Spot ${selectedSpot.number} reserved from ${startTime} to ${endTime}!`
         );
 
-        setSelectedSpot(null); // Reset state after successful reservation
+        setSelectedSpot(null);
       } catch (error) {
         console.error("Failed to reserve spot:", error);
       }

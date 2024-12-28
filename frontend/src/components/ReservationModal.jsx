@@ -19,7 +19,10 @@ export default function ReservationModal({ spot, onClose, onReserve }) {
   // Function to validate if the start time is in the past
   const validateStartTime = (startTime) => {
     const currentTime = new Date();
-    if (startTime < currentTime.getMilliseconds()) {
+
+    console.log(startTime, currentTime.getTime());
+
+    if (startTime < currentTime.getTime()) {
       setError(
         "Selected start time is in the past. Please choose a future time."
       );

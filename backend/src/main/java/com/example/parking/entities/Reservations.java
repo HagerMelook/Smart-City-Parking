@@ -43,16 +43,16 @@ public class Reservations implements DBConnection {
         //         END;
         //         """;
 
-        String updateSpotStatus = """
-                CREATE TRIGGER update_spot
-                AFTER INSERT ON reservations
-                FOR EACH ROW
-                BEGIN
-                    UPDATE parking_spots
-                    SET status = 'reserved'
-                    WHERE spot_id = NEW.spot_id;
-                END;
-                """;
+        // String updateSpotStatus = """
+        //         CREATE TRIGGER update_spot
+        //         AFTER INSERT ON reservations
+        //         FOR EACH ROW
+        //         BEGIN
+        //             UPDATE parking_spots
+        //             SET status = 'reserved'
+        //             WHERE spot_id = NEW.spot_id;
+        //         END;
+        //         """;
 
         String createEventQuery = """
                 CREATE EVENT update_expired_reservations
@@ -118,7 +118,7 @@ public class Reservations implements DBConnection {
                 Statement statement = connection.createStatement()) {
 
             //statement.executeUpdate(applyPenaltyTrigger);
-            statement.executeUpdate(updateSpotStatus);
+            //statement.executeUpdate(updateSpotStatus);
             statement.executeUpdate(createEventQuery);
             statement.executeUpdate(cancelledStatusTrigger);
             statement.executeUpdate(confirmedStatusTrigger);

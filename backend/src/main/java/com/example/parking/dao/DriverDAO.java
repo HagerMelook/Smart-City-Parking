@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.parking.dto.DriverDTO;
 import com.example.parking.entities.DBConnection;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class DriverDAO implements DBConnection {

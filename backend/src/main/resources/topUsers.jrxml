@@ -1,0 +1,68 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="Top Users" language="java" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ca25da74-db57-4888-a93f-e671385a6fa2">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+    <field name="name" class="java.lang.String">
+    </field>
+    <field name="numberOfReservations" class="java.lang.Integer">
+    </field>
+    <field name="plateNumber" class="java.lang.String">
+    </field>
+    <background/>
+    <title height="72">
+        <element kind="frame" uuid="b263c7cf-ebf2-49fb-8647-698d1f84815b" mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699">
+            <element kind="staticText" uuid="36da5edf-352c-4c00-abe9-709d849beb2e" x="20" y="20" width="234" height="43" forecolor="#FFFFFF" fontSize="34.0" bold="true">
+                <text><![CDATA[Top Users]]></text>
+            </element>
+            <element kind="staticText" uuid="70fca6c6-f021-4995-98bc-6942a19787b9" x="395" y="43" width="180" height="20" forecolor="#FFFFFF" fontSize="14.0" bold="false" hTextAlign="Right">
+                <text><![CDATA[Users with Most Reservations]]></text>
+            </element>
+        </element>
+    </title>
+    <pageHeader height="13"/>
+    <columnHeader height="21">
+        <element kind="line" uuid="43bc4159-60ed-4627-a652-1f48b1eddf57" x="-20" y="20" width="595" height="1" forecolor="#666666"/>
+        <element kind="staticText" uuid="cda1eca5-f6fb-42fe-8597-d97b34c83bcb" mode="Opaque" x="0" y="0" width="185" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Center">
+            <text><![CDATA[Name]]></text>
+            <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7f291f4e-6c41-4a34-af7b-2e161658ac29"/>
+        </element>
+        <element kind="staticText" uuid="30803734-e880-4839-8538-40f97fdbba39" mode="Opaque" x="185" y="0" width="185" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Center">
+            <text><![CDATA[Reservations Number]]></text>
+            <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9bbd23a2-0430-4f03-b95b-570499dd0edb"/>
+        </element>
+        <element kind="staticText" uuid="dddb4ab2-a47d-442e-a4a6-23e57db8e8f8" mode="Opaque" x="370" y="0" width="185" height="20" forecolor="#006699" backcolor="#E6E6E6" fontSize="14.0" bold="true" hTextAlign="Center">
+            <text><![CDATA[Plate Number]]></text>
+            <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="caf65ca0-af9f-4e90-83c1-df81f860eece"/>
+        </element>
+    </columnHeader>
+    <detail>
+        <band height="20">
+            <element kind="line" uuid="ab20a455-e52b-47f8-bc13-b754eebcc344" positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1"/>
+            <element kind="textField" uuid="8b9303b3-3c00-4157-ae5a-17a4792ccd0a" x="0" y="0" width="185" height="20" fontSize="14.0" textAdjust="StretchHeight">
+                <expression><![CDATA[$F{name}]]></expression>
+                <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7f291f4e-6c41-4a34-af7b-2e161658ac29"/>
+            </element>
+            <element kind="textField" uuid="c178c005-a7e8-41b9-b0da-70bbb8ec98fd" x="185" y="0" width="185" height="20" fontSize="14.0" textAdjust="StretchHeight">
+                <expression><![CDATA[$F{numberOfReservations}]]></expression>
+                <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9bbd23a2-0430-4f03-b95b-570499dd0edb"/>
+            </element>
+            <element kind="textField" uuid="e0a69516-b633-4be8-8d93-48441c676ba9" x="370" y="0" width="185" height="20" fontSize="14.0" textAdjust="StretchHeight">
+                <expression><![CDATA[$F{plateNumber}]]></expression>
+                <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="caf65ca0-af9f-4e90-83c1-df81f860eece"/>
+            </element>
+        </band>
+    </detail>
+    <columnFooter/>
+    <pageFooter height="214">
+        <element kind="textField" uuid="65498e74-5166-48c5-98fd-28fdd95a7c6b" mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" hTextAlign="Right">
+            <expression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></expression>
+        </element>
+        <element kind="textField" uuid="d755182a-93de-4883-a102-f0cdb4d6e6bb" mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" evaluationTime="Report">
+            <expression><![CDATA[" " + $V{PAGE_NUMBER}]]></expression>
+        </element>
+        <element kind="textField" uuid="550ee425-3973-4e7a-9b78-ec91c0e59c9a" x="0" y="4" width="100" height="13" pattern="EEEEE dd MMMMM yyyy">
+            <expression><![CDATA[new java.util.Date()]]></expression>
+        </element>
+    </pageFooter>
+    <summary/>
+</jasperReport>

@@ -17,10 +17,9 @@ public class SpotController {
         this.spotService = spotService;
     }
 
-    @PostMapping("/{spotId}/reserve")
-    public ResponseEntity reserveSpot(@PathVariable int spotId, @RequestBody ReservationDTO reservations) {
-        System.out.println("Receiving");
-        return spotService.reserveSpot(spotId, reservations);
+    @PostMapping("/reserve")
+    public ResponseEntity reserveSpot(@RequestBody ReservationDTO reservation) {
+        return spotService.reserveSpot(reservation.getSpot_id(), reservation);
     }
 
 }
