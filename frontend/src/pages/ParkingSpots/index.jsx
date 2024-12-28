@@ -22,16 +22,19 @@ export default function ParkingSpots() {
   }
 
   useEffect(() => {
-    const lotId = searchParams.get("userId");
+    const lotId = searchParams.get("id");
+    console.log(lotId);
 
     async function fetchParkingSpots() {
       const response = await fetch(`http://localhost:8080/lots/${lotId}/spots`);
       const data = await response.json();
+      console.log(data);
 
       const spotsWithNumbers = data.map((spot, index) => ({
         ...spot,
         number: index + 1,
       }));
+      console.log(spotsWithNumbers);
 
       setSpots(spotsWithNumbers);
     }

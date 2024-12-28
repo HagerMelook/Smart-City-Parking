@@ -17,11 +17,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const id = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await fetch("http://localhost:3001/notifications");
+        const response = await fetch("http://localhost:8080/notifications/" + id);
         if (response.ok) {
           const data = await response.json();
           setNotifications(data);
@@ -60,7 +61,7 @@ export default function NotificationsPage() {
         { method: "DELETE" }
       );
       if (response.ok) {
-        setNotifications((prev) => prev.filter((n) => n.id !== id));
+        setNotifications((prev) => prev.filter((n) => n.notification_id !== id));
       } else {
         console.error("Failed to delete notification:", response.statusText);
       }
@@ -97,14 +98,14 @@ export default function NotificationsPage() {
         ) : (
           <List>
             {notifications.map((notification, index) => (
-              <React.Fragment key={notification.id}>
+              <React.Fragment key={notification.notification_id}>
                 {index > 0 && <Divider />}
                 <ListItem
                   secondaryAction={
                     <IconButton
                       edge="end"
                       aria-label="delete"
-                      onClick={() => handleDelete(notification.id)}
+                      onClick={() => handleDelete(notification.notification_id)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -124,7 +125,7 @@ export default function NotificationsPage() {
                             fontWeight: notification.read ? "normal" : "bold",
                           }}
                         >
-                          {notification.message}
+                          {notification.msg}
                         </Typography>
                       </Box>
                     }

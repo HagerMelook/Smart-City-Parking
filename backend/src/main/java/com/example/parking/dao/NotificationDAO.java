@@ -10,9 +10,11 @@ import java.util.List;
 
 import com.example.parking.dto.NotificationDTO;
 import com.example.parking.entities.DBConnection;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class NotificationDAO implements DBConnection {
-    public int insertDriver(NotificationDTO notification) {
+    public int insertNotification(NotificationDTO notification) {
         String insertSQL = "INSERT INTO notification (user_id,type, msg, time) VALUES (?, ?, ?, ?)";
         int generatedId = 0;
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
