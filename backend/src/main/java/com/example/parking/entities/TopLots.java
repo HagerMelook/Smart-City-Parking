@@ -35,7 +35,7 @@ public class TopLots implements DBConnection{
             FOR EACH ROW
             BEGIN
                 IF NEW.revenue >= 10000 THEN
-                    SET NEW.is_top = TRUE
+                    SET NEW.is_top = TRUE;
                 END IF;
             END;
             """;
