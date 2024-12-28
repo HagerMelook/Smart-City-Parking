@@ -1,5 +1,7 @@
 package com.example.parking;
 
+import com.example.parking.dao.UserDAO;
+import com.example.parking.dto.UserDTO;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -55,6 +57,12 @@ public class ParkingApplication {
 		tu.createTriggers();
 		Notification no = new Notification();
 		no.createTable();
-
+		UserDAO userDAO = new UserDAO();
+		UserDTO admin = UserDTO.builder()
+				.userType("system-admin")
+				.email("parking@gmail.com")
+				.password("Parking123")
+				.build();
+		userDAO.insertUser(admin);
 	}
 }

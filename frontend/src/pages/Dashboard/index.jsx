@@ -1,13 +1,10 @@
-import React from "react";
-import { Box, Container, Tab, Tabs, Button } from "@mui/material";
+import { Box, Container, Button } from "@mui/material";
 
 import { Description as ReportIcon } from "@mui/icons-material";
 // import RecentActivity from "./components/RecentActivity";
 import proptypes from "prop-types";
 
 export default function ParkingDashboard() {
-  const [tabValue, setTabValue] = React.useState(0);
-
   const handleTopUsersReport = () => {
     window.location.href = "http://localhost:8080/admin/topUsers";
   };
@@ -44,13 +41,6 @@ export default function ParkingDashboard() {
         >
           Top Lots Report
         </Button>
-      </Box>
-
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)}>
-          <Tab label="Operations Dashboard" />
-          <Tab label="Analytics Dashboard" />
-        </Tabs>
       </Box>
     </Container>
   );
